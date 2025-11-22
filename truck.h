@@ -18,7 +18,7 @@ _Task Truck {
 
 	unsigned int currentVM = 0;
 
-	unsigned int cargo[];
+	unsigned int cargo[BottlingPlant::NUM_OF_FLAVOURS] = {};
 
 	void load_cargo();
 

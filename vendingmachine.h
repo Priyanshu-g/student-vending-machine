@@ -1,4 +1,16 @@
+#include "printer.h"
+#include "nameserver.h"
+#include "bottlingplant.h"
+#include "watcard.h"
+
 _Task VendingMachine {
+	Printer prt;
+	NameServer ns;
+	unsigned int id;
+	unsigned int sc;
+
+	unsigned int stock[BottlingPlant::NUM_OF_FLAVOURS] = {};
+
 	void main();
   public:
 	_Exception Funds {};					// insufficient funds
