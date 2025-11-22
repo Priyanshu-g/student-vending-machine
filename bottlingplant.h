@@ -1,7 +1,21 @@
+#include "printer.h"
+#include "nameserver.h"
+#include "truck.h"
 _Task BottlingPlant {
 	void main();
+	Printer prt;
+	NameServer ns;
+	unsigned int nvm;
+	unsigned int mshippf;
+	unsigned int mstockpf;
+	unsigned int time;
+
+	bool terminated = false;
+
+	unsigned int prod_run[];
+
   public:
-	enum Flavours { ..., NUM_OF_FLAVOURS };	// flavours of soda (YOU DEFINE)
+	enum Flavours { Blues, BlackCherry, CreamSoda, RootBeer, Lime, NUM_OF_FLAVOURS };	// flavours of soda (YOU DEFINE)
 	_Exception Shutdown {};					// shutdown plant
 	BottlingPlant( Printer & prt, NameServer & nameServer, unsigned int numVendingMachines,
 				 unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour,
