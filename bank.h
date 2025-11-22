@@ -1,4 +1,6 @@
 _Monitor Bank {
+	unsigned int* accounts;
+	uCondition* accountWithdraws;
   public:
 	Bank( unsigned int numStudents );
 	// id is 0 indexed!
