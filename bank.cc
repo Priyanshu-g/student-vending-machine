@@ -23,3 +23,8 @@ void Bank::withdraw( unsigned int id, unsigned int amount ){
     // assume my amount is present, debit the card
     accounts[id] -= amount;
 }
+
+Bank::~Bank(){
+    delete accounts;
+    delete accountWithdraws;
+}
