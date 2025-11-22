@@ -3,6 +3,7 @@ class WATCard {
 	WATCard( const WATCard && ) = delete;
 	WATCard & operator=( const WATCard & ) = delete;
 	WATCard & operator=( const WATCard && ) = delete;
+	unsigned int balance = 0;
   public:
 	typedef Future_ISM<WATCard *> FWATCard;	// future watcard pointer
 	WATCard();
