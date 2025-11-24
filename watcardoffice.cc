@@ -25,16 +25,24 @@ Job * WATCardOffice::requestWork( ) { // Barging is irrelevant because it doesn'
 
 WATCardOffice::Courier::Courier( unsigned int id, Bank & bank ) : id(id), bank(bank) { }
 
+WATCardOffice::Courier::~Courier( ) { prt.print( Printer::Courier, id, 'F' ); }
+
 void WATCardOffice::Courier::main( ) {
+    prt.print( Printer::Courier, id, 'S' );
+
     for ( ;; ) {
         Job * currentJob = WATCardOffice::requestWork();
+
+        prt.print( Printer::Courier, id, 't', currentJob->args.sid, currentJob->args.amount );
         bank.withdraw( currentJob->args.sid, currentJob->args.amount );
         currentJob->args.card.deposit( currentJob->args.amount );
         if ( prng( 6 ) == 0 ) { // 1/6 chance to lose WATCard
             delete currentJob->args.card;
             currentJob->result.delivery( new WATCardOffice::Lost );
+            prt.print( Printer::Courier, id, 'L', currentJob->args.sid );
         } else {
             currentJob->result.delivery( currentJob->args.card );
+            prt.print( Printer::Courier, id, 'T', currentJob->args.sid, currentJob->args.amount );
         }
     }
 }

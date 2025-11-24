@@ -28,6 +28,7 @@ _Task WATCardOffice {
 		void main();
 	  public:
 		Courier( unsigned int id, Bank & bank );
+		~Courier();
 	};					
 
 	std::deque<Courier> couriers {};
