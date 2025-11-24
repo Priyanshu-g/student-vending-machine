@@ -37,7 +37,6 @@ void Student::main( ) {
                 }
                 numDrank++;
             } _Catch ( VendingMachine::Funds & ) {
-                // PENDING PIAZZA ANSWER -> should giftCard reset if funds is thrown by a call using it?
                 cardOffice.transfer( id, vm->cost() + 5, watCard() );
             } _Catch ( WATCardOffice::Lost & ) {
                 prt.print( Printer::Student, id, 'L' );
