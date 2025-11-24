@@ -12,11 +12,13 @@ Student::Student( Printer & prt, NameServer & nameServer, WATCardOffice & cardOf
                 giftCard = groupoff.giftCard( id );
              }
 
+Student::~Student( ) { prt.print( Printer::Student, id, 'F', numDrank, numFree ); }
+
 void Student::main( ) {
     prt.print( Printer::Student, id, 'S', (unsigned int) favouriteFlavour, numPurchases );
     
-    prt.print( Printer::Student, id, 'V', vm->getId() );
     vm = nameServer.getMachine( id );
+    prt.print( Printer::Student, id, 'V', vm->getId() );
 
     bool delay = true;
 
@@ -27,26 +29,29 @@ void Student::main( ) {
             try {
                 _Select ( giftCard ) { // Prioritize using giftCard.
                     vm->buy( favouriteFlavour, giftCard );
-                    prt.print( Printer::Student, id, 'G', favouriteFlavour, giftCard()->getBalance() );
+                    prt.print( Printer::Student, id, 'G', (unsigned int) favouriteFlavour, giftCard()->getBalance() );
                     giftCard.reset(); // Always reset giftCard once used
                 } or _Select ( watCard ) {
                     vm->buy( favouriteFlavour, watCard );
-                    prt.print( Printer::Student, id, 'B', favouriteFlavour, watCard()->getBalance() );
+                    prt.print( Printer::Student, id, 'B', (unsigned int) favouriteFlavour, watCard()->getBalance() );
                 }
+                numDrank++;
             } _Catch ( VendingMachine::Funds & ) {
                 // PENDING PIAZZA ANSWER -> should giftCard reset if funds is thrown by a call using it?
                 cardOffice.transfer( id, vm->cost() + 5, watCard() );
             } _Catch ( WATCardOffice::Lost & ) {
+                prt.print( Printer::Student, id, 'L' );
                 cardOffice.create( id, 5 );
                 delay = false; // Attempt another purchase WITHOUT YIELDING
             } _Catch ( VendingMachine::Stock & ) {
                 vm = nameServer.getMachine( id );
+                prt.print( Printer::Student, id, 'V', vm->getId() );
             } _Catch ( VendingMachine::Free & ) {
-                if ( prng( 2 ) == 0 ) { yield( 4 ); } // Watch ad, 50% chance
+                prt.print( Printer::Student, id, 'A', (unsigned int) favouriteFlavour );
+                numDrank++; numFree++;
+                if ( prng( 2 ) == 0 ) { prt.printer( Printer::Student, id, 'X' ); yield( 4 ); } // Watch ad, 50% chance
                 delay = false; // Attempt another purchase WITHOUT YIELDING
             } // try
         }
-        
-        
     }
 }

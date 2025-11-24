@@ -13,8 +13,8 @@ _Task Student {
 	Printer & prt;
 	NameServer & nameServer;
 	WATCardOffice & cardOffice;
-	// Groupoff& groupoff; --> Call and receive FWATCard from groupoff, no need to store
-	unsigned int id, numPurchases;
+	unsigned int id, numPurchases; 
+	unsigned int numDrank = 0, numFree = 0;
     BottlingPlant::Flavours favouriteFlavour;
 	FWATCard watCard, giftCard;
 	VendingMachine * vm;
