@@ -2,10 +2,7 @@
 #define TRUCK_H
 
 #include "printer.h"
-#include "vendingmachine.h"
-
-_Task BottlingPlant; // Forward decl
-_Task NameServer; // Forward decl
+#include "bottlingplant.h"
 
 _Task Truck {
 	void main();
