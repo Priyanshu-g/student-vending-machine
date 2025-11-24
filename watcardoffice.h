@@ -14,8 +14,8 @@ _Task WATCardOffice {
 	struct Job {							// marshalled arguments and return future
 		enum JobKind { CREATE, TRANSFER };
 		struct Args {
-			Job::JobKind kind;
-			unsigned int sid, amount;
+			const Job::JobKind kind;
+			const unsigned int sid, amount;
 			WATCard * card;
 		};
 		Args args;							// call arguments (YOU DEFINE "Args")
@@ -23,13 +23,17 @@ _Task WATCardOffice {
 		Job( Args args ) : args( args ) {}
 	};
 	_Task Courier { 						// communicates with bank (YOU DEFINE "Courier")
+		unsigned int id;
+		Bank & bank;
 		void main();
 	  public:
-		Courier();
+		Courier( unsigned int id, Bank & bank );
 	};					
 
 	std::deque<Courier> couriers {};
 	std::deque<Job *> jobs {};
+	Job::Args argsToPass;
+	Job * jobToPass;
 
 	void main();
   public:
