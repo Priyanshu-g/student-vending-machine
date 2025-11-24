@@ -12,8 +12,6 @@ Student::Student( Printer & prt, NameServer & nameServer, WATCardOffice & cardOf
                 giftCard = groupoff.giftCard( id );
              }
 
-Student::~Student( ) { prt.print( Printer::Student, id, 'F', numDrank, numFree ); }
-
 void Student::main( ) {
     prt.print( Printer::Student, id, 'S', (unsigned int) favouriteFlavour, numPurchases );
     
@@ -23,6 +21,7 @@ void Student::main( ) {
     bool delay = true;
 
     for ( ;; ) {
+        if ( numDrank >= maxPurchases ) { prt.print( Printer::Student, id, 'F', numDrank, numFree ); break; }
         if ( delay ) { delay = true; yield( prng( 1, 10 ) ); }
         // Attempt to purchase soda, looking for Funds, Stock, or Free
         _Enable {
