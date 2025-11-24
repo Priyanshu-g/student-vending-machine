@@ -3,14 +3,14 @@
 Groupoff::Groupoff( Printer & prt, unsigned int numStudents, unsigned int sodaCost, unsigned int groupoffDelay )
     : prt(prt), numStudents(numStudents), sodaCost(sodaCost), groupoffDelay(groupoffDelay) {
     for ( int sid = 0; sid < numStudents; sid++ ) { 
-        giftCards[sid] = WATCard::FWATCard(); 
-        listPermutation[sid] = sid;
+        giftCards.emplace_back( WATCard::FWATCard() ); 
+        listPermutation.emplace_back( sid );
     }
     for (int sid = 0; sid < numStudents; sid++ ) { // Shuffle permutation
-        unsigned int temp = listPermutation[sid];
+        unsigned int temp = listPermutation.at( sid );
         unsigned int newIndex = prng( numStudents );
-        listPermutation[sid] = listPermutation[newIndex];
-        listPermutation[newIndex] = temp; 
+        listPermutation.at( sid ) = listPermutation.at( newIndex );
+        listPermutation.at( newIndex ) = temp; 
     }
 }
 
@@ -32,9 +32,9 @@ void Groupoff::main( ) {
     for ( ; targetGiftCard >= 0; ) {
         yield( groupoffDelay );
 
-        giftCards[listPermutation[targetGiftCard]].delivery( (new WATCard())->deposit( sodaCost ) );
+        giftCards.at( listPermutation.at( targetGiftCard ) ).delivery( (new WATCard())->deposit( sodaCost ) );
         --targetGiftCard;
-        prt.print( Printer::Groupoff, 'D', listPermutation[targetGiftCard], sodaCost );
+        prt.print( Printer::Groupoff, 'D', listPermutation.at( targetGiftCard ), sodaCost );
 
         _Accept ( ~Groupoff ) {
             prt.print( Printer::Groupoff, 'F' );

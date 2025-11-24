@@ -10,10 +10,10 @@ _Task Groupoff {
 	Printer & prt;
 	unsigned int numStudents, sodaCost, groupoffDelay;
 
-	// std::vector<WATCard::FWATCard> giftCards {};
-	// std::vector<unsigned int> listPermutation {};
-	WATCard::FWATCard giftCards[numStudents];
-	unsigned int listPermutation[numStudents];
+	std::vector<WATCard::FWATCard> giftCards {};
+	std::vector<unsigned int> listPermutation {};
+	// WATCard::FWATCard giftCards[numStudents];
+	// unsigned int listPermutation[numStudents];
 	unsigned int targetGiftCard = 0;
 
 	void main();

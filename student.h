@@ -16,7 +16,7 @@ _Task Student {
 	unsigned int id, numPurchases; 
 	unsigned int numDrank = 0, numFree = 0;
     BottlingPlant::Flavours favouriteFlavour;
-	FWATCard watCard, giftCard;
+	WATCard::FWATCard watCard, giftCard;
 	VendingMachine * vm;
 
 	void main();

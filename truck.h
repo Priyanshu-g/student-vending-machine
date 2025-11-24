@@ -1,6 +1,11 @@
+#ifndef TRUCK_H
+#define TRUCK_H
+
 #include "printer.h"
-#include "nameserver.h"
-#include "bottlingplant.h"
+#include "vendingmachine.h"
+
+_Task BottlingPlant; // Forward decl
+_Task NameServer; // Forward decl
 
 _Task Truck {
 	void main();
@@ -26,3 +31,5 @@ _Task Truck {
 	Truck( Printer & prt, NameServer & nameServer, BottlingPlant & plant,
 		   unsigned int numVendingMachines, unsigned int maxStockPerFlavour );
 };
+
+#endif
