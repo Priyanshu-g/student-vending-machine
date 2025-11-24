@@ -1,3 +1,6 @@
+#ifndef NAMESERVER_H
+#define NAMESERVER_H
+
 #include "vendingmachine.h"
 _Task NameServer {
 	void main();
@@ -17,3 +20,5 @@ _Task NameServer {
 	VendingMachine * getMachine( unsigned int id ) __attribute__(( warn_unused_result ));
 	VendingMachine ** getMachineList() __attribute__(( warn_unused_result ));
 };
+
+#endif

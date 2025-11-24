@@ -1,3 +1,6 @@
+#ifndef BOTTLINGPLANT_H
+#define BOTTLINGPLANT_H
+
 #include "printer.h"
 #include "nameserver.h"
 #include "truck.h"
@@ -25,3 +28,5 @@ _Task BottlingPlant {
 				 unsigned int timeBetweenShipments );
 	void getShipment( unsigned int cargo[] );
 };
+
+#endif

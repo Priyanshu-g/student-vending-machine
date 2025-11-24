@@ -1,3 +1,8 @@
+#ifndef WATCARD_H
+#define WATCARD_H
+
+#include <uFuture.h>
+
 class WATCard {
 	WATCard( const WATCard & ) = delete;	// prevent copying
 	WATCard( const WATCard && ) = delete;
@@ -11,3 +16,5 @@ class WATCard {
 	void withdraw( unsigned int amount );
 	unsigned int getBalance();
 };
+
+#endif

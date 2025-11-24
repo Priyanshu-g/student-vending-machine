@@ -1,3 +1,6 @@
+#ifndef PRINTER_H
+#define PRINTER_H 
+
 #include <vector>
 
 using namespace std;
@@ -40,3 +43,5 @@ _Monitor Printer {
   void print( Kind kind, unsigned int lid, char state, unsigned int value1 );
   void print( Kind kind, unsigned int lid, char state, unsigned int value1, unsigned int value2 );
 };
+
+#endif
