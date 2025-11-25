@@ -28,7 +28,6 @@ WATCard::FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount
 
 WATCardOffice::Job * WATCardOffice::requestWork( ) { // Barging is irrelevant because it doesn't matter which courier takes a task
     courierBench.wait();
-    if ( !jobs.empty() ) { courierBench.signal(); }
     return jobToPass;
 }
 
@@ -67,6 +66,7 @@ void WATCardOffice::main( ) {
         _When ( !jobs.empty() ) _Accept( requestWork ) {
             jobToPass = jobs.front();
             jobs.pop_front();
+            courierBench.signalBlock();
             prt.print( Printer::WATCardOffice, 'W' ); // NOTE: This is not technically when the call completes
         } _Accept ( create ) {
             jobs.emplace_back( jobToPass );

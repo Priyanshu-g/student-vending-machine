@@ -2,7 +2,6 @@
 #define NAMESERVER_H
 
 #include "printer.h"
-#include <vector>
 _Task VendingMachine;
 
 _Task NameServer {
@@ -14,7 +13,7 @@ _Task NameServer {
 
 	VendingMachine ** vms;
 
-	std::vector<unsigned int> vmAssignment;
+	unsigned int* vmAssignment;
   public:
 	~NameServer();
 	NameServer( Printer & prt, unsigned int numVendingMachines, unsigned int numStudents );

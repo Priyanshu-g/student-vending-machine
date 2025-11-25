@@ -4,7 +4,7 @@
 
 VendingMachine::VendingMachine( Printer & prt, NameServer & nameServer, unsigned int id, unsigned int sodaCost )
     : prt(prt), ns(nameServer), id(id), sc(sodaCost) {
-    // TODO: check if need to init stock array
+    ns.VMregister( this );
 }
 
 

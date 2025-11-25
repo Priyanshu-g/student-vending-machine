@@ -12,11 +12,13 @@ void NameServer::main(){
     // once all registered, we can turn into a monitor, our thread is not needed
 }
 NameServer::NameServer( Printer & prt, unsigned int numVendingMachines, unsigned int numStudents ):prt(prt),nvm(numVendingMachines), ns(numStudents){
+    vmAssignment = new unsigned int[ns]();
     unsigned int vmit = 0; // assign VM 0 first
     for( unsigned int i = 0; i < ns; ++i ){ // for each student
-        vmAssignment.emplace_back( vmit ); // assign
+        vmAssignment[i] = vmit; // assign
         vmit = (vmit + 1) % nvm; // then iterate over all VMs
     }
+    vms = new VendingMachine*[nvm]();
 }
 
 void NameServer::VMregister( VendingMachine * vendingmachine ){
@@ -27,6 +29,8 @@ void NameServer::VMregister( VendingMachine * vendingmachine ){
     prt.print(Printer::NameServer, 'R', vmId); // registered VM
 }
 
+#include<iostream>
+using namespace std;
 VendingMachine * NameServer::getMachine( unsigned int id ) {
     // remember, id is the student id
 
