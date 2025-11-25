@@ -14,7 +14,7 @@ void NameServer::main(){
 NameServer::NameServer( Printer & prt, unsigned int numVendingMachines, unsigned int numStudents ):prt(prt),nvm(numVendingMachines), ns(numStudents){
     unsigned int vmit = 0; // assign VM 0 first
     for( unsigned int i = 0; i < ns; ++i ){ // for each student
-        vmAssignment[i] = vmit; // assign
+        vmAssignment.emplace_back( vmit ); // assign
         vmit = (vmit + 1) % nvm; // then iterate over all VMs
     }
 }

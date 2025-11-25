@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 #include <uPRNG.h>
 
 #include "config.h"
