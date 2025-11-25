@@ -1,6 +1,9 @@
+#include "printer.h"
+#include "bank.h"
+
 _Task Parent {
-	Printer prt;
-	Bank bnk;
+	Printer& prt;
+	Bank& bnk;
 	unsigned int students;
 	unsigned delay;
 	void main();

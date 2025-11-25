@@ -7,8 +7,8 @@
 #include "watcard.h"
 
 _Task VendingMachine {
-	Printer prt;
-	NameServer ns;
+	Printer& prt;
+	NameServer& ns;
 	unsigned int id;
 	unsigned int sc;
 

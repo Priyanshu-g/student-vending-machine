@@ -3,13 +3,16 @@
 
 #include "printer.h"
 #include "bottlingplant.h"
+#include "nameserver.h"
+
+_Task VendingMachine;
 
 _Task Truck {
 	void main();
 
-	Printer prt;
-	NameServer ns;
-	BottlingPlant plant;
+	Printer& prt;
+	NameServer& ns;
+	BottlingPlant& plant;
 
 	unsigned int nvm;
 	unsigned int mspf;

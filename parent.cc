@@ -1,4 +1,4 @@
-#include "printer.h"
+#include "parent.h"
 #include <bits/charconv.h>
 #include <uPRNG.h>
 
@@ -9,7 +9,7 @@ void Parent::main(){
     unsigned int gifts = 0;
     for(;;){
         // first select random student
-        unsigned int selected_student = prng( students ) // aasume 0 indexes
+        unsigned int selected_student = prng( students ); // aasume 0 indexes
 
         int added = 0;
         // get 10?
@@ -17,7 +17,7 @@ void Parent::main(){
             added = 10;
         } else {
             // get 1-3
-            added = prng( 3 ) + 1
+            added = prng( 3 ) + 1;
         }
 
         // yield
@@ -27,7 +27,7 @@ void Parent::main(){
         // must print here after yield
 
         // send to bank
-        bnk.deposit( id, added );
+        bnk.deposit( selected_student, added );
 
         gifts += added;
 

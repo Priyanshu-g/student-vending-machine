@@ -2,10 +2,14 @@
 #define PRINTER_H 
 
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
 _Monitor Printer {
+  public:
+  enum Kind { Parent, Groupoff, WATCardOffice, NameServer, Truck, BottlingPlant, Student, Vending, Courier };
+  private:
   struct Slot {
     bool occupied = false;
 
@@ -32,9 +36,11 @@ _Monitor Printer {
   vector<Slot> cs; // coursies
 
   void dump();
+  void load( Slot slot, Kind kind);
+  void load( Slot slot, Kind kind, unsigned int i);
 
  public:
-  enum Kind { Parent, Groupoff, WATCardOffice, NameServer, Truck, BottlingPlant, Student, Vending, Courier };
+  ~Printer();
   Printer( unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers );
   void print( Kind kind, char state );
   void print( Kind kind, char state, unsigned int value1 );

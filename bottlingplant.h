@@ -3,15 +3,14 @@
 
 #include "printer.h"
 #include "nameserver.h"
-#include "truck.h"
 
 _Task BottlingPlant {
 	public:
 		enum Flavours { Blues, BlackCherry, CreamSoda, RootBeer, Lime, NUM_OF_FLAVOURS };	// flavours of soda (YOU DEFINE)
 	private:
 		void main();
-		Printer prt;
-		NameServer ns;
+		Printer& prt;
+		NameServer& ns;
 		unsigned int nvm;
 		unsigned int mshippf;
 		unsigned int mstockpf;

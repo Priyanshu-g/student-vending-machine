@@ -8,24 +8,23 @@ Printer::Printer( unsigned int numStudents, unsigned int numVendingMachines, uns
     cout << "Names" << '\t';
     cout << "Truck" << '\t';
     cout << "Plant" << '\t';
-    Stud0 Stud1 Mach0 Mach1 Mach2 Cour0
 
     for (unsigned int i = 0; i < numStudents; ++i) {
         cout << "Stud" << i;
         if(i != numStudents - 1 || numVendingMachines != 0) cout << '\t';
-        ss.push_back(Slot{})
+        ss.push_back(Slot{});
     }
 
     for (unsigned int i = 0; i < numVendingMachines; ++i) {
         cout << "Mach" << i;
         if(i != numVendingMachines - 1 || numCouriers != 0) cout << '\t';
-        vms.push_back(Slot{})
+        vms.push_back(Slot{});
     }
 
     for (unsigned int i = 0; i < numCouriers; ++i) {
         cout << "Cour" << i;
         if(i != numCouriers - 1) cout << '\t';
-        cs.push_back(Slot{})
+        cs.push_back(Slot{});
     }
     
     cout << endl;
@@ -152,7 +151,7 @@ void Printer::load( Slot slot, Kind kind){
     }
 }
 
-void Pinter::load( Slot slot, Kind kind, unsigned int i){
+void Printer::load( Slot slot, Kind kind, unsigned int i){
     switch (kind) {
         case Student:
             if (ss[i].occupied) dump();
@@ -163,8 +162,8 @@ void Pinter::load( Slot slot, Kind kind, unsigned int i){
             vms[i] = slot;
             break;
         case Courier:
-            if (wco[i].occupied) dump();
-            wco[i] = slot;
+            if (cs[i].occupied) dump();
+            cs[i] = slot;
             break;
         default:
             _Throw InvalidFunctionCall();
@@ -175,37 +174,61 @@ void Pinter::load( Slot slot, Kind kind, unsigned int i){
 // then load in via the correct load function
 
 void Printer::print( Kind kind, char state ){
-    Slot new_print = Slot{ occupied = true, state = state, numbers = 0 }
+    Slot new_print;
+    new_print.occupied = true;
+    new_print.state = state;
+    new_print.numbers = 0;
 
-    load(new_print, kind)
+    load( new_print, kind );
 }
 
 void Printer::print( Kind kind, char state, unsigned int value1 ){
-    Slot new_print = Slot{ occupied = true, state = state, numbers = 1, one = value1 }
+    Slot new_print;
+    new_print.occupied = true;
+    new_print.state = state;
+    new_print.numbers = 1;
+    new_print.one = value1;
 
-    load(new_print, kind)
+    load( new_print, kind );
 }
 
 void Printer::print( Kind kind, char state, unsigned int value1, unsigned int value2 ){
-    Slot new_print = Slot{ occupied = true, state = state, numbers = 2, one = value1, two = value2 }
+    Slot new_print;
+    new_print.occupied = true;
+    new_print.state = state;
+    new_print.numbers = 2;
+    new_print.one = value1;
+    new_print.two = value2;
 
-    load(new_print, kind)
+    load( new_print, kind );
 }
-
-
 
 void Printer::print( Kind kind, unsigned int lid, char state ){
-    Slot new_print = Slot{ occupied = true, state = state, numbers = 0 }
+    Slot new_print;
+    new_print.occupied = true;
+    new_print.state = state;
+    new_print.numbers = 0;
 
-    load(new_print, kind, lid)
+    load( new_print, kind, lid );
 }
+
 void Printer::print( Kind kind, unsigned int lid, char state, unsigned int value1 ){
-    Slot new_print = Slot{ occupied = true, state = state, numbers = 1, one = value1 }
+    Slot new_print;
+    new_print.occupied = true;
+    new_print.state = state;
+    new_print.numbers = 1;
+    new_print.one = value1;
 
-    load(new_print, kind, lid)
+    load( new_print, kind, lid );
 }
-void Printer::print( Kind kind, unsigned int lid, char state, unsigned int value1, unsigned int value2 ){
-    Slot new_print = Slot{ occupied = true, state = state, numbers = 2, one = value1, two = value2 }
 
-    load(new_print, kind, lid)
+void Printer::print( Kind kind, unsigned int lid, char state, unsigned int value1, unsigned int value2 ){
+    Slot new_print;
+    new_print.occupied = true;
+    new_print.state = state;
+    new_print.numbers = 2;
+    new_print.one = value1;
+    new_print.two = value2;
+
+    load( new_print, kind, lid );
 }

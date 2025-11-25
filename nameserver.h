@@ -1,17 +1,19 @@
 #ifndef NAMESERVER_H
 #define NAMESERVER_H
 
-#include "vendingmachine.h"
+#include "printer.h"
+_Task VendingMachine;
+
 _Task NameServer {
 	void main();
 
-	Printer prt;
+	Printer& prt;
 	unsigned int nvm;
 	unsigned int ns;
 
 	VendingMachine ** vms;
 
-	unsigned int vmAssignment[];
+	unsigned int* vmAssignment;
   public:
 	~NameServer();
 	NameServer( Printer & prt, unsigned int numVendingMachines, unsigned int numStudents );

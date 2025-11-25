@@ -53,6 +53,7 @@ int main ( int argc, char * argv[] ) {
     processConfigFile(in, config);
 
     uProcessor p[processors - 1]; // number of kernel threads
+    // TODO: Maybe use uArray here?
     VendingMachine * vendingMachines[config.numVendingMachines];
     Student * students[config.numStudents];
     {
@@ -69,7 +70,6 @@ int main ( int argc, char * argv[] ) {
         for ( unsigned int student = 0; student < config.numStudents; student++ ) {
             students[student] = new Student( prt, nameServer, cardOffice, groupoff, student, config.maxPurchases );
         }
-
 
         for ( unsigned int student = 0; student < config.numStudents; student++ ) { delete students[student]; }
         delete bottlingPlant; // Per the suggestion of the assignment description
