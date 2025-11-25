@@ -13,7 +13,7 @@ _Task Student {
 	Printer & prt;
 	NameServer & nameServer;
 	WATCardOffice & cardOffice;
-	unsigned int id, numPurchases; 
+	unsigned int id, maxPurchases, numPurchases; 
 	unsigned int numDrank = 0, numFree = 0;
     BottlingPlant::Flavours favouriteFlavour;
 	WATCard::FWATCard watCard, giftCard;
