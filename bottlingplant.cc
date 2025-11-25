@@ -13,7 +13,7 @@ void BottlingPlant::main(){
 
 
     // TODO: check if stack works
-    Truck( prt, ns, this, nvm, mstockpf); // First create a truck
+    Truck( prt, ns, *this, nvm, mstockpf); // First create a truck
 
     for(;;){
         yield( time );
@@ -47,7 +47,7 @@ void BottlingPlant::main(){
     }
 }
 
-BottlingPlant::getShipment( unsigned int cargo[] ){ // refernce to the trucks cargo
+void BottlingPlant::getShipment( unsigned int cargo[] ){ // refernce to the trucks cargo
     if (terminated) _Throw Shutdown();
     
     for (int i = 0; i < NUM_OF_FLAVOURS; ++i) cargo[i] = prod_run[i]; // overwrite since old drinks are expired
