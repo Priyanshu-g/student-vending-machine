@@ -23,6 +23,8 @@ void VendingMachine::main(){
     }
 }
 
+#include <iostream>
+
 void VendingMachine::buy( BottlingPlant::Flavours flavour, WATCard & card ){
     if(card.getBalance() < sc){
         _Resume Funds(); // not enough to buy

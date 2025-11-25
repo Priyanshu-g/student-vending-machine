@@ -19,6 +19,8 @@ _Task Student {
 	WATCard::FWATCard watCard, giftCard;
 	VendingMachine * vm;
 
+	bool failed = false;
+
 	void main();
   public:
 	Student( Printer & prt, NameServer & nameServer, WATCardOffice & cardOffice, Groupoff & groupoff,

@@ -17,6 +17,7 @@ WATCardOffice::~WATCardOffice( ) {
 }
 
 WATCard::FWATCard WATCardOffice::create( unsigned int sid, unsigned int amount ) {
+    std::cout << "CREATE ENTERED BY " << sid << std::endl;
     jobToPass = new Job( Job::Args( sid, amount, new WATCard() ) );
     return jobToPass->result;
 }
@@ -29,12 +30,12 @@ WATCard::FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount
 WATCardOffice::Job * WATCardOffice::requestWork( ) { // Barging is irrelevant because it doesn't matter which courier takes a task
     if ( jobs.empty() ) { courierBench.wait(); }
 
-    jobToPass = jobs.front();
+    Job * jobToTake = jobs.front();
     jobs.pop_front();
-    if ( !jobs.empty() ) { courierBench.signal(); }
+    if ( !jobs.empty() ) { courierBench.signalBlock(); }
     prt.print( Printer::WATCardOffice, 'W' );
 
-    return jobToPass;
+    return jobToTake;
 }
 
 WATCardOffice::Job::Args::Args( unsigned int sid, unsigned int amount, WATCard * card )
@@ -45,21 +46,14 @@ WATCardOffice::Courier::Courier( Printer & prt, WATCardOffice & cardOffice, unsi
 
 WATCardOffice::Courier::~Courier( ) { prt.print( Printer::Courier, id, 'F' ); }
 
-#include <iostream>
-
 void WATCardOffice::Courier::main( ) {
     prt.print( Printer::Courier, id, 'S' );
 
     for ( ;; ) {
         WATCardOffice::Job * currentJob = cardOffice.requestWork();
 
-        std::cout << "START REQUESTED WORK" << std::endl; // Runs, blocks on something below (probably withdraw)
-        // This seems to be part of the reason that the second Student blocks on create.
-        
         prt.print( Printer::Courier, id, 't', currentJob->args.sid, currentJob->args.amount );
-        std::cout << "START WITHDRAWL" << std::endl; // BLOCKS HERE
         bank.withdraw( currentJob->args.sid, currentJob->args.amount );
-        std::cout << "FINISH WITHDRAWL" << std::endl;
         currentJob->args.card->deposit( currentJob->args.amount );
         if ( prng( 6 ) == 0 ) { // 1/6 chance to lose WATCard
             delete currentJob->args.card;
