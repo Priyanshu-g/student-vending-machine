@@ -1,8 +1,10 @@
 #include "truck.h"
-#include "uPRNG.h"
+#include <uPRNG.h>
+#include "vendingmachine.h"
 
 Truck::Truck( Printer & prt, NameServer & nameServer, BottlingPlant & plant,
-        unsigned int numVendingMachines, unsigned int maxStockPerFlavour ):prt(prt), ns(nameServer), plant(plant), nvm(nvm), mspf(maxStockPerFlavour){}
+        unsigned int numVendingMachines, unsigned int maxStockPerFlavour ) 
+        : prt(prt), ns(nameServer), plant(plant), nvm(numVendingMachines), mspf(maxStockPerFlavour){}
 
 
 void Truck::load_cargo(){
@@ -62,7 +64,7 @@ void Truck::main(){
         prt.print(Printer::Truck, 'P', bottles);
 
         // now serve the machine AFTER iterator, until we run out, OR iterator loops fully
-        for(int i = 0; i < nvm; ++i){
+        for(unsigned int i = 0; i < nvm; ++i){
             // loop vending machine times, but will use iterator (managed by load_cargo)
             if (bottles == 0) {
                 // we just loaded that drained us (now empty)
