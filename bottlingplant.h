@@ -3,6 +3,9 @@
 
 #include "printer.h"
 #include "nameserver.h"
+// #include "truck.h"
+
+_Task Truck;
 
 _Task BottlingPlant {
 	public:
@@ -15,6 +18,8 @@ _Task BottlingPlant {
 		unsigned int mshippf;
 		unsigned int mstockpf;
 		unsigned int time;
+
+		Truck * truck;
 
 		bool terminated = false;
 

@@ -1,19 +1,17 @@
 #include "bottlingplant.h"
-#include "uPRNG.h"
+#include <uPRNG.h>
 #include "truck.h"
 
+#include <iostream>
 
 BottlingPlant::BottlingPlant( Printer & prt, NameServer & nameServer, unsigned int numVendingMachines,
 				 unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour,
 				 unsigned int timeBetweenShipments ):prt(prt), ns(nameServer), nvm(numVendingMachines), mshippf(maxShippedPerFlavour), mstockpf(maxStockPerFlavour), time(timeBetweenShipments){
+            truck = new Truck( prt, ns, *this, nvm, mstockpf );
         }
 
 void BottlingPlant::main(){
     prt.print(Printer::BottlingPlant, 'S');
-
-
-    // TODO: check if stack works
-    Truck( prt, ns, *this, nvm, mstockpf); // First create a truck
 
     for(;;){
         yield( time );
