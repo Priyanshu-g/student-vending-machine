@@ -1,11 +1,9 @@
 #include "vendingmachine.h"
 #include "uPRNG.h"
 #include <unistd.h>
-// _Exception Funds {};					// insufficient funds
-// _Exception Stock {};					// flavour out of stock
-// _Exception Free {};						// free, advertisement
 
-VendingMachine::VendingMachine( Printer & prt, NameServer & nameServer, unsigned int id, unsigned int sodaCost ):prt(prt), ns(NameServer), id(id), sc(sodaCost){
+VendingMachine::VendingMachine( Printer & prt, NameServer & nameServer, unsigned int id, unsigned int sodaCost )
+    : prt(prt), ns(nameServer), id(id), sc(sodaCost) {
     // TODO: check if need to init stock array
 }
 
@@ -49,7 +47,7 @@ void VendingMachine::buy( BottlingPlant::Flavours flavour, WATCard & card ){
     card.withdraw(sc); // debit the card if not free
 }
 
-unsigned int * VendingMachine::inventory() __attribute__(( warn_unused_result )){
+unsigned int * VendingMachine::inventory() {
     prt.print(Printer::Vending, id, 'r');
     // just return my stock, they can edit it, I will block (in main) until restocked fires
     return stock;
