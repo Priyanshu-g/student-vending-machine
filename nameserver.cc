@@ -1,4 +1,5 @@
 #include "nameserver.h"
+#include "vendingmachine.h"
 
 void NameServer::main(){
     prt.print(Printer::NameServer, 'S');
@@ -12,7 +13,7 @@ void NameServer::main(){
 }
 NameServer::NameServer( Printer & prt, unsigned int numVendingMachines, unsigned int numStudents ):prt(prt),nvm(numVendingMachines), ns(numStudents){
     unsigned int vmit = 0; // assign VM 0 first
-    for(int i = 0; i < ns; ++i){ // for each student
+    for( unsigned int i = 0; i < ns; ++i ){ // for each student
         vmAssignment[i] = vmit; // assign
         vmit = (vmit + 1) % nvm; // then iterate over all VMs
     }
@@ -26,7 +27,7 @@ void NameServer::VMregister( VendingMachine * vendingmachine ){
     prt.print(Printer::NameServer, 'R', vmId); // registered VM
 }
 
-VendingMachine * NameServer::getMachine( unsigned int id ) __attribute__(( warn_unused_result )){
+VendingMachine * NameServer::getMachine( unsigned int id ) {
     // remember, id is the student id
 
     // get ptr to the vending machine current assigned to the student
@@ -42,7 +43,7 @@ VendingMachine * NameServer::getMachine( unsigned int id ) __attribute__(( warn_
 }
 
 
-VendingMachine ** NameServer::getMachineList() __attribute__(( warn_unused_result )){
+VendingMachine ** NameServer::getMachineList() {
     return vms;
 }
 
