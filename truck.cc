@@ -39,11 +39,14 @@ void Truck::load_cargo(){
     currentVM = (currentVM + 1) % nvm;
 }
 
+#include <iostream>
         
 void Truck::main(){
     prt.print(Printer::Truck, 'S');
     // get vending machines
     vms = ns.getMachineList();
+
+    cout << "TRUCK RECEIVED MACHINE LIST" << std::endl; 
 
     for(;;){
         // yield between 1 and 10

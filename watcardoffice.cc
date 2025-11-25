@@ -27,7 +27,13 @@ WATCard::FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount
 }
 
 WATCardOffice::Job * WATCardOffice::requestWork( ) { // Barging is irrelevant because it doesn't matter which courier takes a task
-    courierBench.wait();
+    if ( jobs.empty() ) { courierBench.wait(); }
+
+    jobToPass = jobs.front();
+    jobs.pop_front();
+    if ( !jobs.empty() ) { courierBench.signal(); }
+    prt.print( Printer::WATCardOffice, 'W' );
+
     return jobToPass;
 }
 
@@ -39,14 +45,21 @@ WATCardOffice::Courier::Courier( Printer & prt, WATCardOffice & cardOffice, unsi
 
 WATCardOffice::Courier::~Courier( ) { prt.print( Printer::Courier, id, 'F' ); }
 
+#include <iostream>
+
 void WATCardOffice::Courier::main( ) {
     prt.print( Printer::Courier, id, 'S' );
 
     for ( ;; ) {
         WATCardOffice::Job * currentJob = cardOffice.requestWork();
 
+        std::cout << "START REQUESTED WORK" << std::endl; // Runs, blocks on something below (probably withdraw)
+        // This seems to be part of the reason that the second Student blocks on create.
+        
         prt.print( Printer::Courier, id, 't', currentJob->args.sid, currentJob->args.amount );
+        std::cout << "START WITHDRAWL" << std::endl; // BLOCKS HERE
         bank.withdraw( currentJob->args.sid, currentJob->args.amount );
+        std::cout << "FINISH WITHDRAWL" << std::endl;
         currentJob->args.card->deposit( currentJob->args.amount );
         if ( prng( 6 ) == 0 ) { // 1/6 chance to lose WATCard
             delete currentJob->args.card;
@@ -63,21 +76,22 @@ void WATCardOffice::main( ) {
     prt.print( Printer::WATCardOffice, 'S' );
 
     for ( ;; ) {
-        _When ( !jobs.empty() ) _Accept( requestWork ) {
-            jobToPass = jobs.front();
-            jobs.pop_front();
-            courierBench.signalBlock();
-            prt.print( Printer::WATCardOffice, 'W' ); // NOTE: This is not technically when the call completes
+        // _When ( !jobs.empty() ) 
+        _Accept( requestWork ) {
+            // jobToPass = jobs.front();
+            // jobs.pop_front();
+            // courierBench.signalBlock();
         } _Accept ( create ) {
             jobs.emplace_back( jobToPass );
             prt.print( Printer::WATCardOffice, 'C', jobToPass->args.sid, jobToPass->args.amount );
+            courierBench.signalBlock();
         } _Accept ( transfer ) {
             jobs.emplace_back( jobToPass );
             prt.print( Printer::WATCardOffice, 'T', jobToPass->args.sid, jobToPass->args.amount );
+            courierBench.signalBlock();
         } _Accept ( ~WATCardOffice ) {
             prt.print( Printer::WATCardOffice, 'F' );
             break;
         }
-        courierBench.signalBlock();
     }
 }

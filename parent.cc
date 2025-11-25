@@ -21,7 +21,8 @@ void Parent::main(){
         }
 
         // yield
-        yield( delay );
+        // yield( delay );
+        yield( 1000000 );
 
         prt.print(Printer::Parent, (added == 10 ? 'E' : 'D'), selected_student, added); // if fixed 10 then E, else D since random amount
         // must print here after yield

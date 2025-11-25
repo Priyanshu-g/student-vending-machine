@@ -29,8 +29,6 @@ void NameServer::VMregister( VendingMachine * vendingmachine ){
     prt.print(Printer::NameServer, 'R', vmId); // registered VM
 }
 
-#include<iostream>
-using namespace std;
 VendingMachine * NameServer::getMachine( unsigned int id ) {
     // remember, id is the student id
 
