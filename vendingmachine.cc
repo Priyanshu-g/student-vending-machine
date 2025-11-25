@@ -7,48 +7,46 @@ VendingMachine::VendingMachine( Printer & prt, NameServer & nameServer, unsigned
     ns.VMregister( this );
 }
 
-
+#include <iostream>
 void VendingMachine::main(){
     prt.print(Printer::Vending, id, 'S', sc);
     for(;;){
-        // either someone buys, or we get restock attempt
-        _Accept (buy){}
-        or _Accept (inventory) {
-            // if restock attempt, we must block (preventing any buying) until restocked is triggered
-            _Accept (restocked){}
-        } _Accept (~VendingMachine) {
-            prt.print(Printer::Vending, id, 'F');
-            break;
-        }
+        try{
+            // either someone buys, or we get restock attempt
+            _Accept (buy){
+            } or _Accept (inventory) {
+                // if restock attempt, we must block (preventing any buying) until restocked is triggered
+                _Accept (restocked){}
+            } or _Accept (~VendingMachine) {
+                prt.print(Printer::Vending, id, 'F');
+                break;
+            }
+        } catch ( uMutexFailure::RendezvousFailure& ){}
     }
 }
 
-#include <iostream>
-
 void VendingMachine::buy( BottlingPlant::Flavours flavour, WATCard & card ){
     if(card.getBalance() < sc){
-        _Resume Funds(); // not enough to buy
-    } else if (stock[flavour] == 0){
-        _Resume Stock();
-    } else {
-        // remove the drink since we must provide at this point
-        stock[flavour] -= 1;
-
-        // check if free
-        if (prng( 5 ) == 0){
-            prt.print(Printer::Vending, id, 'A');
-            _Resume Free();
-        } else {
-            // only print soda bought if not free (following example in assignment doc)
-            prt.print(Printer::Vending, id, 'B', flavour, stock[flavour]);
-
-            card.withdraw(sc); // debit the card if not free
-        }
-
-        
+        _Throw Funds(); // not enough to buy
     }
 
-    
+    if(stock[flavour] == 0){
+        _Throw Stock();
+    }
+
+    // remove the drink since we must provide at this point
+    stock[flavour] -= 1;
+
+    // check if free
+    if (prng( 5 ) == 0){
+        prt.print(Printer::Vending, id, 'A');
+        _Throw Free();
+    }
+
+    // only print soda bought if not free (following example in assignment doc)
+    prt.print(Printer::Vending, id, 'B', flavour, stock[flavour]);
+
+    card.withdraw(sc); // debit the card if not free    
 }
 
 unsigned int * VendingMachine::inventory() {

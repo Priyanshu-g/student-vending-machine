@@ -7,11 +7,12 @@
 BottlingPlant::BottlingPlant( Printer & prt, NameServer & nameServer, unsigned int numVendingMachines,
 				 unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour,
 				 unsigned int timeBetweenShipments ):prt(prt), ns(nameServer), nvm(numVendingMachines), mshippf(maxShippedPerFlavour), mstockpf(maxStockPerFlavour), time(timeBetweenShipments){
-            truck = new Truck( prt, ns, *this, nvm, mstockpf );
         }
 
 void BottlingPlant::main(){
     prt.print(Printer::BottlingPlant, 'S');
+
+    Truck t ( prt, ns, *this, nvm, mstockpf );
 
     for(;;){
         yield( time );
@@ -34,19 +35,21 @@ void BottlingPlant::main(){
             prt.print(Printer::BottlingPlant, 'P'); // picked up by truck
 
         } or _Accept( ~BottlingPlant ){ 
+            std::cout << "FINISH BP" << std::endl;
 
             prt.print(Printer::BottlingPlant, 'F'); // all done!
 
-            terminated = true; // track finished to kill truck later too
+            _Resume Shutdown() _At t;
 
             break; 
 
         }
     }
+    std::cout << "TERMINATE BP" << std::endl;
+
 }
 
 void BottlingPlant::getShipment( unsigned int cargo[] ){ // refernce to the trucks cargo
-    if (terminated) _Throw Shutdown();
     
     for (int i = 0; i < NUM_OF_FLAVOURS; ++i) cargo[i] = prod_run[i]; // overwrite since old drinks are expired
 }

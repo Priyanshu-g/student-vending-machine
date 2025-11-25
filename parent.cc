@@ -1,5 +1,4 @@
 #include "parent.h"
-#include <bits/charconv.h>
 #include <uPRNG.h>
 
 Parent::Parent( Printer & prt, Bank & bank, unsigned int numStudents, unsigned int parentalDelay ):prt(prt), bnk(bank), students(numStudents), delay(parentalDelay){}
@@ -21,8 +20,7 @@ void Parent::main(){
         }
 
         // yield
-        // yield( delay );
-        yield( 1000000 );
+        yield( delay );
 
         prt.print(Printer::Parent, (added == 10 ? 'E' : 'D'), selected_student, added); // if fixed 10 then E, else D since random amount
         // must print here after yield
@@ -35,6 +33,7 @@ void Parent::main(){
         // check for dtor
         _Accept( ~Parent ){
             prt.print(Printer::Parent, 'F', gifts);
+
             break;
         } _Else {}
     }

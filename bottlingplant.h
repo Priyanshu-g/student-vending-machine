@@ -19,8 +19,6 @@ _Task BottlingPlant {
 		unsigned int mstockpf;
 		unsigned int time;
 
-		Truck * truck;
-
 		bool terminated = false;
 
 		unsigned int prod_run[BottlingPlant::NUM_OF_FLAVOURS] = {};

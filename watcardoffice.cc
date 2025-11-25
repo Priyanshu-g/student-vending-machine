@@ -75,15 +75,15 @@ void WATCardOffice::main( ) {
             // jobToPass = jobs.front();
             // jobs.pop_front();
             // courierBench.signalBlock();
-        } _Accept ( create ) {
+        } or _Accept ( create ) {
             jobs.emplace_back( jobToPass );
             prt.print( Printer::WATCardOffice, 'C', jobToPass->args.sid, jobToPass->args.amount );
-            courierBench.signalBlock();
-        } _Accept ( transfer ) {
+            if ( !courierBench.empty() ) { courierBench.signalBlock(); }
+        } or _Accept ( transfer ) {
             jobs.emplace_back( jobToPass );
             prt.print( Printer::WATCardOffice, 'T', jobToPass->args.sid, jobToPass->args.amount );
-            courierBench.signalBlock();
-        } _Accept ( ~WATCardOffice ) {
+            if ( !courierBench.empty() ) { courierBench.signalBlock(); }
+        } or _Accept ( ~WATCardOffice ) {
             prt.print( Printer::WATCardOffice, 'F' );
             break;
         }

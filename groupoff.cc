@@ -37,8 +37,9 @@ void Groupoff::main( ) {
         --targetGiftCard;
 
         _Accept ( ~Groupoff ) {
-            prt.print( Printer::Groupoff, 'F' );
             break;
         } _Else { }
     }
+    prt.print( Printer::Groupoff, 'F' );
+
 }

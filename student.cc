@@ -30,45 +30,37 @@ void Student::main( ) {
 
     for ( ;; ) {
         if ( numDrank >= numPurchases ) { prt.print( Printer::Student, id, 'F', numDrank, numFree ); break; }
-        if ( delay ) { delay = true; yield( prng( 1, 10 ) ); }
+
+        if ( delay ) { yield( prng( 1, 10 ) ); }
+        // if ( delay ) { yield( 1000000 ); }
+        else { delay = true; }
         // Attempt to purchase soda, looking for Funds, Stock, or Free
-        _Enable {
             try {
                 _Select ( giftCard ) { // Prioritize using giftCard.
                     vm->buy( favouriteFlavour, *(giftCard()) );
-                    if ( !failed ) {
-                        failed = false;
-                        prt.print( Printer::Student, id, 'G', (unsigned int) favouriteFlavour, giftCard()->getBalance() );
-                        giftCard.reset(); // Always reset giftCard once used
-                    }
+                    prt.print( Printer::Student, id, 'G', (unsigned int) favouriteFlavour, giftCard()->getBalance() );
+                    giftCard.reset(); // Always reset giftCard once used
                 } or _Select ( watCard ) {
                     vm->buy( favouriteFlavour, *(watCard()) );
-                    if ( !failed ) {
-                        failed = false;
-                        prt.print( Printer::Student, id, 'B', (unsigned int) favouriteFlavour, watCard()->getBalance() );
-                    }
+                    prt.print( Printer::Student, id, 'B', (unsigned int) favouriteFlavour, watCard()->getBalance() );
                 }
                 numDrank++;
-            } _CatchResume ( VendingMachine::Funds & ) {
+            } _Catch ( VendingMachine::Funds & ) {
                 watCard = cardOffice.transfer( id, vm->cost() + 5, watCard() );
-                failed = true;
-            } _CatchResume ( VendingMachine::Stock & ) {
+            } _Catch ( VendingMachine::Stock & ) {
                 vm = nameServer.getMachine( id );
                 prt.print( Printer::Student, id, 'V', vm->getId() );
-                failed = true;
-            } _CatchResume ( VendingMachine::Free & ) {
+            } _Catch ( VendingMachine::Free & ) {
                 prt.print( Printer::Student, id, 'A', (unsigned int) favouriteFlavour );
                 numFree++;
-                if ( prng( 2 ) == 0 ) { prt.print( Printer::Student, id, 'X' ); yield( 4 ); } // Watch ad, 50% chance
+                if ( prng( 2 ) == 0 ) { std::cout << "PRINT X" << std::endl; prt.print( Printer::Student, id, 'X' ); yield( 4 ); } // Watch ad, 50% chance
                 delay = false; // Attempt another purchase WITHOUT YIELDING
-                failed = true;
             } _Catch ( WATCardOffice::Lost & ) {
                 prt.print( Printer::Student, id, 'L' );
                 watCard = cardOffice.create( id, 5 );
                 delay = false; // Attempt another purchase WITHOUT YIELDING
-                failed = true;
             } // try
-        }
+        
     }
     // exit(0);
 }
