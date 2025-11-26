@@ -10,7 +10,9 @@
 _Task WATCardOffice {
 	Printer & prt;
 	Bank & bank;
-	uCondition courierBench;			
+	uCondition courierBench;
+	
+	_Exception End{};
 
 	struct Job {							// marshalled arguments and return future
 		struct Args {

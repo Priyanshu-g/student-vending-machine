@@ -13,8 +13,8 @@ void VendingMachine::main(){
     for(;;){
         try{
             // either someone buys, or we get restock attempt
-            _Accept (buy){
-            } or _Accept (inventory) {
+            _Accept (buy){} 
+            or _Accept (inventory) {
                 // if restock attempt, we must block (preventing any buying) until restocked is triggered
                 _Accept (restocked){}
             } or _Accept (~VendingMachine) {

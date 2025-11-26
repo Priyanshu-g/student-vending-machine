@@ -37,8 +37,10 @@ void Student::main( ) {
         // Attempt to purchase soda, looking for Funds, Stock, or Free
             try {
                 _Select ( giftCard ) { // Prioritize using giftCard.
-                    vm->buy( favouriteFlavour, *(giftCard()) );
+                    WATCard *gc = giftCard();
+                    vm->buy( favouriteFlavour, *gc );
                     prt.print( Printer::Student, id, 'G', (unsigned int) favouriteFlavour, giftCard()->getBalance() );
+                    delete gc;
                     giftCard.reset(); // Always reset giftCard once used
                 } or _Select ( watCard ) {
                     vm->buy( favouriteFlavour, *(watCard()) );
@@ -53,7 +55,7 @@ void Student::main( ) {
             } _Catch ( VendingMachine::Free & ) {
                 prt.print( Printer::Student, id, 'A', (unsigned int) favouriteFlavour );
                 numFree++;
-                if ( prng( 2 ) == 0 ) { std::cout << "PRINT X" << std::endl; prt.print( Printer::Student, id, 'X' ); yield( 4 ); } // Watch ad, 50% chance
+                if ( prng( 2 ) == 0 ) { prt.print( Printer::Student, id, 'X' ); yield( 4 ); } // Watch ad, 50% chance
                 delay = false; // Attempt another purchase WITHOUT YIELDING
             } _Catch ( WATCardOffice::Lost & ) {
                 prt.print( Printer::Student, id, 'L' );
@@ -62,5 +64,6 @@ void Student::main( ) {
             } // try
         
     }
-    // exit(0);
+
+    delete watCard();
 }

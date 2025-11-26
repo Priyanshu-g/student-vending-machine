@@ -49,6 +49,8 @@ VendingMachine ** NameServer::getMachineList() {
     return vms;
 }
 
-NameServer::~NameServer(){
+NameServer::~NameServer(){    
+    delete[] vmAssignment;   // free unsigned int[ns]
+    delete[] vms;            // free VendingMachine*[nvm]
     prt.print(Printer::NameServer, 'F'); // print finished when destoryed (not a thread anymore!)
 }

@@ -40,21 +40,21 @@ void Truck::load_cargo(){
     currentVM = (currentVM + 1) % nvm;
 }
 
-#include<iostream>
 
 void Truck::main(){
     prt.print(Printer::Truck, 'S');
     // get vending machines
     vms = ns.getMachineList();
 
-    _Enable {
-        try {
-            for(;;){
+    try {
+        for(;;){
+            _Enable { // can terminate anywhere here
                 // yield between 1 and 10
                 yield( prng(10) + 1);
                 
                 // load in cargo
                 plant.getShipment(cargo);
+
 
                 bottles = 0; // reset since new batch
                 for(int i = 0; i < BottlingPlant::NUM_OF_FLAVOURS; ++i){
@@ -62,28 +62,28 @@ void Truck::main(){
                 }
 
                 prt.print(Printer::Truck, 'P', bottles);
+            }
 
-                // now serve the machine AFTER iterator, until we run out, OR iterator loops fully
-                for(unsigned int i = 0; i < nvm; ++i){
-                    // loop vending machine times, but will use iterator (managed by load_cargo)
-                    if (bottles == 0) {
-                        // we just loaded that drained us (now empty)
-                        break;
-                    }
+            // now serve the machine AFTER iterator, until we run out, OR iterator loops fully
+            for(unsigned int i = 0; i < nvm; ++i){
+                // loop vending machine times, but will use iterator (managed by load_cargo)
+                if (bottles == 0) {
+                    // we just loaded that drained us (now empty)
+                    break;
+                }
 
-                    load_cargo();
+                load_cargo();
 
-                    // successful delivery, still some stuff left
-                    // check for robbery
-                    if (prng( 10 ) == 0) {
-                        prt.print(Printer::Truck, 'R', bottles);
-                        break; // robbed, cargo dead
-                    }
+                // successful delivery, still some stuff left
+                // check for robbery
+                if (prng( 10 ) == 0) {
+                    prt.print(Printer::Truck, 'R', bottles);
+                    break; // robbed, cargo dead
                 }
             }
-        } _Catch (BottlingPlant::Shutdown & ) { std::cout << "CATCH SHUTDOWN" << std::endl;}
-    }
-    std::cout << "FINISH TRUCK" << std::endl;
+        }
+    } _Catch (BottlingPlant::Shutdown & ) {}
+    
     prt.print(Printer::Truck, 'F'); // finished when break out and end
 }
 

@@ -9,15 +9,23 @@ WATCardOffice::WATCardOffice( Printer & prt, Bank & bank, unsigned int numCourie
 
 WATCardOffice::~WATCardOffice( ) {
     for ( auto & it : couriers ) {
+        _Resume End() _At *it;
+    }
+
+    while( !courierBench.empty() ) { 
+        courierBench.signalBlock(); 
+    }
+
+    for ( auto & it : couriers ) {
         delete it;
     }
+
     for ( auto & it : jobs ) {
         delete it;
     }
 }
 
 WATCard::FWATCard WATCardOffice::create( unsigned int sid, unsigned int amount ) {
-    std::cout << "CREATE ENTERED BY " << sid << std::endl;
     jobToPass = new Job( Job::Args( sid, amount, new WATCard() ) );
     return jobToPass->result;
 }
@@ -32,7 +40,7 @@ WATCardOffice::Job * WATCardOffice::requestWork( ) { // Barging is irrelevant be
 
     Job * jobToTake = jobs.front();
     jobs.pop_front();
-    if ( !jobs.empty() ) { courierBench.signalBlock(); }
+    if ( !jobs.empty() ) { courierBench.signal(); } // daisy chain
     prt.print( Printer::WATCardOffice, 'W' );
 
     return jobToTake;
@@ -49,21 +57,27 @@ WATCardOffice::Courier::~Courier( ) { prt.print( Printer::Courier, id, 'F' ); }
 void WATCardOffice::Courier::main( ) {
     prt.print( Printer::Courier, id, 'S' );
 
-    for ( ;; ) {
-        WATCardOffice::Job * currentJob = cardOffice.requestWork();
+    try{
+        _Enable{
+            for ( ;; ) {
+                WATCardOffice::Job * currentJob = cardOffice.requestWork();
 
-        prt.print( Printer::Courier, id, 't', currentJob->args.sid, currentJob->args.amount );
-        bank.withdraw( currentJob->args.sid, currentJob->args.amount );
-        currentJob->args.card->deposit( currentJob->args.amount );
-        if ( prng( 6 ) == 0 ) { // 1/6 chance to lose WATCard
-            delete currentJob->args.card;
-            currentJob->result.delivery( new WATCardOffice::Lost );
-            prt.print( Printer::Courier, id, 'L', currentJob->args.sid );
-        } else {
-            currentJob->result.delivery( currentJob->args.card );
-            prt.print( Printer::Courier, id, 'T', currentJob->args.sid, currentJob->args.amount );
+                prt.print( Printer::Courier, id, 't', currentJob->args.sid, currentJob->args.amount );
+                bank.withdraw( currentJob->args.sid, currentJob->args.amount );
+                currentJob->args.card->deposit( currentJob->args.amount );
+                if ( prng( 6 ) == 0 ) { // 1/6 chance to lose WATCard
+                    delete currentJob->args.card;
+                    currentJob->result.delivery( new WATCardOffice::Lost );
+                    prt.print( Printer::Courier, id, 'L', currentJob->args.sid );
+                } else {
+                    currentJob->result.delivery( currentJob->args.card );
+                    prt.print( Printer::Courier, id, 'T', currentJob->args.sid, currentJob->args.amount );
+                }
+
+                delete currentJob;
+            }
         }
-    }
+    } _Catch(WATCardOffice::End&){}
 }
 
 void WATCardOffice::main( ) {

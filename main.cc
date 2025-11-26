@@ -58,7 +58,6 @@ int main ( int argc, char * argv[] ) {
     {
         Printer prt ( config.numStudents, config.numVendingMachines, config.numCouriers );
         Bank bank ( config.numStudents );
-        Parent * parent = new Parent( prt, bank, config.numStudents, config.parentalDelay );
         WATCardOffice cardOffice ( prt, bank, config.numCouriers );
         Groupoff groupoff ( prt, config.numStudents, config.sodaCost, config.groupoffDelay );
         NameServer nameServer ( prt, config.numVendingMachines, config.numStudents );
@@ -66,12 +65,17 @@ int main ( int argc, char * argv[] ) {
             vendingMachines[vm] = new VendingMachine( prt, nameServer, vm, config.sodaCost );
         }
         BottlingPlant * bottlingPlant  = new BottlingPlant( prt, nameServer, config.numVendingMachines, config.maxShippedPerFlavour, config.maxStockPerFlavour, config.timeBetweenShipments );
-        for ( unsigned int student = 0; student < config.numStudents; student++ ) {
-            students[student] = new Student( prt, nameServer, cardOffice, groupoff, student, config.maxPurchases );
-        }
+        
 
-        for ( unsigned int student = 0; student < config.numStudents; student++ ) { delete students[student]; }
-        delete parent;
+        {
+            Parent parent = Parent( prt, bank, config.numStudents, config.parentalDelay );
+        
+            for ( unsigned int student = 0; student < config.numStudents; student++ ) {
+                students[student] = new Student( prt, nameServer, cardOffice, groupoff, student, config.maxPurchases );
+            }
+
+            for ( unsigned int student = 0; student < config.numStudents; student++ ) { delete students[student]; }
+        }
         delete bottlingPlant; // Per the suggestion of the assignment description
         for ( unsigned int vm = 0; vm < config.numVendingMachines; vm++ ) { delete vendingMachines[vm]; }
     }

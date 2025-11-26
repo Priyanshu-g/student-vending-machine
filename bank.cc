@@ -24,7 +24,12 @@ void Bank::withdraw( unsigned int id, unsigned int amount ){
     accounts[id] -= amount;
 }
 
+#include <iostream>
+
 Bank::~Bank(){
-    delete accounts;
-    delete accountWithdraws;
+    delete[] accounts;
+    while(!accountWithdraws->empty()) {
+        accountWithdraws->signal();
+    }
+    delete[] accountWithdraws;
 }

@@ -35,7 +35,6 @@ void BottlingPlant::main(){
             prt.print(Printer::BottlingPlant, 'P'); // picked up by truck
 
         } or _Accept( ~BottlingPlant ){ 
-            std::cout << "FINISH BP" << std::endl;
 
             prt.print(Printer::BottlingPlant, 'F'); // all done!
 
@@ -45,11 +44,10 @@ void BottlingPlant::main(){
 
         }
     }
-    std::cout << "TERMINATE BP" << std::endl;
 
+    _Accept (getShipment) {} _Else {} // release any get shipments
 }
 
 void BottlingPlant::getShipment( unsigned int cargo[] ){ // refernce to the trucks cargo
-    
     for (int i = 0; i < NUM_OF_FLAVOURS; ++i) cargo[i] = prod_run[i]; // overwrite since old drinks are expired
 }
