@@ -14,10 +14,6 @@ TESTING DOCUMENTATION
           cases can refer back to the general case when elements behave in the same way, instead of
           reiterating the same arguments.
 
-    NOTE: Code changes made to facilitate test cases are highlighted in this testdoc but are NOT
-          included in the corresponding .cc files. This is because they all involve removing 
-          randomness from yields, which is a trivial change.
-
     USER INTERFACE TEST
     -------------------
 
@@ -236,9 +232,31 @@ TESTING DOCUMENTATION
             Where Groupoff terminated immediately after completing its rounds.
 
 
+        2. A student who only buys one soda using the gift card
 
-        2. Maximum possible runtime (by way of Student tasks)
+            We are testing what happens when a student purchases exactly one gift card, and can only make purchases with
+	    gift cards. We accomplish this by disabling the select statement which allows WATCards like so:
+
+		_Select ( giftCard ) { // Prioritize using giftCard.
+                    WATCard *gc = giftCard();
+                    vm->buy( favouriteFlavour, *gc );
+                    prt.print( Printer::Student, id, 'G', (unsigned int) favouriteFlavour, giftCard()->getBalance() );
+                    delete gc;
+                    giftCard.reset(); // Always reset giftCard once used
+                } 
+                #ifndef TESTGCONLY
+                    or _Select ( watCard ) {
+                        
+                            vm->buy( favouriteFlavour, *(watCard()) );
+                            prt.print( Printer::Student, id, 'B', (unsigned int) favouriteFlavour, watCard()->getBalance() );
+                    
+                    }
+                #endif
+
+        3. Maximum possible runtime (by way of Student tasks)
 
 
-        3. Students watch advertisements
+
+
+        4. Students watch advertisements
         

@@ -32,7 +32,7 @@ void Student::main( ) {
         if ( numDrank >= numPurchases ) { prt.print( Printer::Student, id, 'F', numDrank, numFree ); break; }
 
         if ( delay ) { yield( prng( 1, 10 ) ); }
-        // if ( delay ) { yield( 1000000 ); }
+
         else { delay = true; }
         // Attempt to purchase soda, looking for Funds, Stock, or Free
             try {
@@ -42,10 +42,15 @@ void Student::main( ) {
                     prt.print( Printer::Student, id, 'G', (unsigned int) favouriteFlavour, giftCard()->getBalance() );
                     delete gc;
                     giftCard.reset(); // Always reset giftCard once used
-                } or _Select ( watCard ) {
-                    vm->buy( favouriteFlavour, *(watCard()) );
-                    prt.print( Printer::Student, id, 'B', (unsigned int) favouriteFlavour, watCard()->getBalance() );
-                }
+                } 
+                #ifndef TESTGCONLY
+                    or _Select ( watCard ) {
+                        
+                            vm->buy( favouriteFlavour, *(watCard()) );
+                            prt.print( Printer::Student, id, 'B', (unsigned int) favouriteFlavour, watCard()->getBalance() );
+                    
+                    }
+                #endif
                 numDrank++;
             } _Catch ( VendingMachine::Funds & ) {
                 watCard = cardOffice.transfer( id, vm->cost() + 5, watCard() );

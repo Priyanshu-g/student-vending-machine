@@ -1,7 +1,7 @@
-
+TESTCASE := NOTEST
 CXX = u++					# uC++ compiler
 #CXX = /u/cs343/cfa-cc/bin/cfa			# CFA compiler
-CXXFLAGS = -g -Wall -Wextra -multi -MMD # compiler flags
+CXXFLAGS = -g -Wall -Wextra -multi -MMD -D"${TESTCASE}" # compiler flags
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
 OBJECTS = main.o config.o printer.o bank.o parent.o watcard.o watcardoffice.o groupoff.o nameserver.o vendingmachine.o bottlingplant.o truck.o student.o
