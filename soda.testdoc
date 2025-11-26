@@ -2,6 +2,21 @@
 TESTING DOCUMENTATION
 =====================
 
+    NOTE: For algorithm tests, the data has been reformated slightly to match the readability
+          of the terminal interface. Some lines have also been omitted to better show specific
+          behaviours; this is noted by *** N LINES OF OUTPUT OMITTED ***, where N is the number
+          of lines omitted. Program termination is marked by *** PROGRAM TERMINATES *** for
+          clarity. Neither of these marks actually appear in program output; they are added in
+          this testdoc for ease of understanding. The same is true of copies of the output header.
+
+    NOTE: The general correctness test goes into considerable detail about the correctness of each
+          element of the program, possibly more than is necessary. This is done so that other test
+          cases can refer back to the general case when elements behave in the same way, instead of
+          reiterating the same arguments.
+
+    NOTE: Code changes made to facilitate test cases are highlighted in this testdoc but are NOT
+          included in the corresponding .cc files. This is because they all involve removing 
+          randomness from yields, which is a trivial change.
 
     USER INTERFACE TEST
     -------------------
@@ -77,9 +92,6 @@ TESTING DOCUMENTATION
                 ParentalDelay 5
                 NumCouriers 1
 
-            We will discuss the results in greater detail so that similar results in other test cases can 
-            refer back to this case.
-
             First, our components start in the correct order:
 
                 Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Mach1	Mach2	Cour0
@@ -89,6 +101,7 @@ TESTING DOCUMENTATION
                                         R1						                        S2
                 S		        C0,5	R2		        S	    S1,8	S1,8			        S2
                 		        W	    N0,0	S	    G11	    V0					                    t0,5
+                		        C1,5	N1,1	P11			            V1
 
             The Printer and Bank notwithstanding, our WATCardOffice, Groupoff, and NameServer all start before
             each task that depends on them. The courier also starts at this time, as it is allocated during 
@@ -109,7 +122,7 @@ TESTING DOCUMENTATION
 
                 Groupoff performs exactly 2 deposits after it starts, then terminates. Seed 1003 deposits for Student
                 0 first, then 1 second; seed 1002 deposits in the opposite order. This is precisely what is expected
-                by the assignment description.
+                by the assignment description. See the Student section for the relevant part of the output.
 
                 In the above output sample, the WATCardOffice correctly receives a Create request from Student 0 and 
                 prints W once the Courier accepts the job (i.e., when it prints t0,5). The same occurs much later for
@@ -126,7 +139,85 @@ TESTING DOCUMENTATION
                 Where the transfer is accepted by the WATCardOffice (T1,7, then W), picked up by the Courier (t1,7),
                 then completed by the Courier (T1,7 after output omission).
 
-                The NameServer
+                The NameServer correctly applies the initial machines for Student 0 and 1, as seen in the output
+                snippit containing the start conditions of the program. That is, it assigns in round-robin order,
+                which is 0 -> 0 and 1 -> 1 in this case. Much later in the program, both students request a new
+                name from the server due to a stock error, at which point NameServer re-assigns them to machines
+                1 and 2, respectively, as is expected of round-robin assignments:
+
+                    Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Mach1	Mach2	Cour0
+                    *******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******
+
+                    			            N0,1	D0,3		    V1	    B1,0	R	    B1,1
+                                                *** 11 LINES OF OUTPUT OMITTED ***
+                    D0,3			        N1,2	P7			            V2				                T1,7
+
+                The Truck performs a large number of delivery runs, so we look at two in particular:
+
+                    Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Mach1	Mach2	Cour0
+                    *******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******
+                    		        W		        P9							                            t0,7
+				                                    d0,9				            r
+				                                    U0,2
+                    D0,3		    T1,7		    D0,6	P			            R
+                    D1,2				            R6	    G10
+				                                    P10
+				                                    d1,10					                r
+				                                    U1,4
+                    D1,1				            D1,6	P				                R
+                                                    d2,6						                    r
+				                                    U2,9
+				                                    D2,2	G8					                    R
+                                                    d0,2				            r
+				                                    U0,2
+                    D0,1				            D0,2				            R
+                    D1,1				            P8
+
+                The first delivery starts with P9, picking up 9 bottles. It attempts to restock machine 0, 
+                fails to stock 2 bottles, then leaves with 6 bottles remaining in the shipment. Finally, it gets
+                robbed, losing the 6 remaining bottles. Once we start the next shipment, we start at the next
+                machine after the last one serviced (machine 1 and 0, respectively), after which we finish the job
+                as normal and return to get the next shipment. 
+
+                We see that the BottlingPlant also performs correctly, as it packs the truck, then generates the
+                correct number of bottles for the following shipment (10, then 8, respectively). The same goes
+                for the VendingMachines, which start (r) and end (R) the restock process alongside the corresponding
+                operations in Truck.
+
+                We saw already that the Students get their initial machines from the NameServer. Now, we show that they
+                can use their WATCards and gift cards:
+
+                    Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Mach1	Mach2	Cour0
+                    *******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******
+                
+                    D1,2	D0,2			        D1,0	P	    G1,0		    B1,0	R
+                    D1,2				            P5	            G5
+				                                    d2,5						                    r
+				                                    U2,20
+	                D1,2			                D2,0	P
+                    D1,1	F			            P4	    G4		        G1,0		    B1,0	R
+                                                *** 22 LINES OF OUTPUT OMITTED ***
+                                                    P9		        B1,3	B1,3	B1,3	B1,2	R	    T1,5
+
+                Before the output omission, we see that both students use their giftcards (G1,0) to buy their favourite
+                flavour (1), and because the gift cards have exactly enough money for one soda, they have no money left
+                on them (0). The purchases are logged by machines 0 and 1. After the omission, we see that both buy
+                using their WATCards (B1,3), which are similarly logged by machine 0 and 1. The transfer completed by
+                the Courier puts 5 dollars on Student 1's WATCard, which is why Student 1 has 3 dollars left after their
+                purchase (5 - 2 = 3). Similar output for Student 0 was omitted for brevity.
+
+                The correctness of the VendingMachines has been proven by way of the other sections, except for the free
+                soda case, shown below:
+
+                    Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Mach1	Mach2	Cour0
+                    *******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******
+                    				                D2,0		    A1		        A
+						                                            X	    A1		        A
+    				D1,1	                                        B1,1	X	    B1,1	B1,0	R
+                    D1,3		    T0,7					                B1,1
+
+                Neither seed tested includes a case where the student does not skip the ad; this case is covered by
+                one of the non-general tests.
 
             Finally, we see that termination is done correctly:
 
@@ -145,5 +236,8 @@ TESTING DOCUMENTATION
 
 
 
-        2. Maximum possible runtime (by way of Student)
+        2. Maximum possible runtime (by way of Student tasks)
+
+
+        3. Students watch advertisements
         
