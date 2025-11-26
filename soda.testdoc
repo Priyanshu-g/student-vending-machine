@@ -1,0 +1,149 @@
+=====================
+TESTING DOCUMENTATION
+=====================
+
+
+    USER INTERFACE TEST
+    -------------------
+
+        The user interface for this assignment is minimal, so
+        our test is small. We used the following CLI configurations:
+
+        1. Expected configurations:
+        
+            For this test, we ran the program using the default .config file provided 
+            in the assignment using these commands:
+
+                ./soda
+                ./soda soda.config
+                ./soda soda.config 1003
+                ./soda soda.config 1003 2
+
+            The resulting output is too long to include in full, but all
+            configurations ran as expected. For the two that included a seed,
+            we were able to determine that both students would always start with
+            a favourite flavour of 1 and a number of purchases to make of 8.
+            Furthermore, the parent would always transfer to Student 1 five times
+            (1, 2, 2, 2, and 1 dollars, in that order) before transfering 2 dollars
+            to Student 0. Similar results apply to Groupoff and Truck. There are 
+            variations in output, but this can be reasonably assumed to be due to
+            processor scheduling rather than a fault in the randomness of our program.
+
+            There is no obvious difference in program behaviour between single and multi-
+            processor iterations. We believe this to be expected behaviour, as the system
+            is designed to reduce the possibility of threads blocking each other as much
+            as possible.
+
+        2. Erroneous configurations
+
+            For this test, we ran the program using the same default .config file using
+            these commands:
+
+                ./soda doesNotExist.config
+                ./soda soda.config 0
+                ./soda soda.config -1
+                ./soda soda.config d 0
+                ./soda soda.config d -1
+
+            A non-existant configuration file is NOT caught in main.cc; instead, the error
+            is thrown by config.cc, which is expected behaviour. The remaining 4 configurations
+            all produce the following correct error output:
+
+                Usage: ./soda [ config-file | ’d’ [ seed (> 0) | ’d’ [ processors (> 0) | ’d’ ] ] ]
+
+            which is our designated message should any of the CLI arguments be out-of-bounds. 
+
+        We also ran tests to confirm the correctness of bounds checking in config.cc, with entirely
+        expected results. We omit a list of the individual changes to the config file for each run,
+        but to summarize, we checked how config.cc responded to each value being 0 and less than 0.
+
+
+    ALGORITHM TESTS
+    ---------------
+
+        1. General correctness
+
+            We first test for correctness in a normal case. To do this, we use the default config file
+            with a seed of 1003, or 1002 if additional context is needed (i.e., ./soda soda.config 1003):
+
+                SodaCost 2
+                NumStudents 2
+                MaxPurchases 8
+                NumVendingMachines 3
+                MaxStockPerFlavour 5
+                MaxShippedPerFlavour 3
+                TimeBetweenShipments 3
+                GroupoffDelay 10
+                ParentalDelay 5
+                NumCouriers 1
+
+            We will discuss the results in greater detail so that similar results in other test cases can 
+            refer back to this case.
+
+            First, our components start in the correct order:
+
+                Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Mach1	Mach2	Cour0
+                *******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******
+                        S	    S	    S								                                S
+                                        R0					                    S2
+                                        R1						                        S2
+                S		        C0,5	R2		        S	    S1,8	S1,8			        S2
+                		        W	    N0,0	S	    G11	    V0					                    t0,5
+
+            The Printer and Bank notwithstanding, our WATCardOffice, Groupoff, and NameServer all start before
+            each task that depends on them. The courier also starts at this time, as it is allocated during 
+            construction of the WATCardOffice. We then see that each machine is constructed in order of increasing
+            id, with each registering with the NameServer in turn (i.e., R0, R1, and R2). The VendingMachines also
+            print the correct soda cost, 2. The Parent and BottlingPlant start next, followed by the Students. The
+            Truck starts last during the BottlingPlant's construction; it is not incorrect for it to have happened
+            after the Students are constructed because the two _Tasks are independent.
+
+            Next, we look at the behaviour of each element of the system:
+
+                Parent adds to the bank 27 times, with only one being a 10 dollar gift. This is correct, as it is 
+                within the bounds of the expected 1/20 odds (we submit that a full statistical analysis would be 
+                outside the scope of this course). In a similar vein, 15 of the remaining 26 pushes to Bank are 
+                to Student 1, which is also not unreasonably biased compared to the expected 1/2 odds in this case.
+                An additional run using the same configuration but with seed of 1002 resulted in 21 pushes with no
+                gifts and 11/21 being to Student 0, which corroberates our statistical assumptions.
+
+                Groupoff performs exactly 2 deposits after it starts, then terminates. Seed 1003 deposits for Student
+                0 first, then 1 second; seed 1002 deposits in the opposite order. This is precisely what is expected
+                by the assignment description.
+
+                In the above output sample, the WATCardOffice correctly receives a Create request from Student 0 and 
+                prints W once the Courier accepts the job (i.e., when it prints t0,5). The same occurs much later for
+                Student 1. We also see that the transfer operation also works:
+
+                    Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Mach1	Mach2	Cour0
+                    *******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******
+                    D1,2		    T1,7		    D2,0		    B1,1		    B1,1		    R
+                    D0,3		    W									                                    t1,7
+                    D0,1		    T0,7		    P8
+                                                *** 10 LINES OF OUTPUT OMITTED ***
+                    D1,3		    W									                                    T1,7
+
+                Where the transfer is accepted by the WATCardOffice (T1,7, then W), picked up by the Courier (t1,7),
+                then completed by the Courier (T1,7 after output omission).
+
+                The NameServer
+
+            Finally, we see that termination is done correctly:
+
+                Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Mach1	Mach2	Cour0
+                *******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******
+                				                P6			            F7,0
+				                                d1,6					                r
+				                                U1,3
+				                                D1,4		    B1,0		     B1,2
+                D1,3				            R4	    P	    F7,0			        R
+                F41					                    G8
+		                        F	    F	    F	    F			             F	    F	    F	    F
+                                                *** PROGRAM TERMINATES ***
+
+            Where Groupoff terminated immediately after completing its rounds.
+
+
+
+        2. Maximum possible runtime (by way of Student)
+        
