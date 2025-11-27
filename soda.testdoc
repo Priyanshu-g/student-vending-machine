@@ -10,9 +10,9 @@ TESTING DOCUMENTATION
           this testdoc for ease of understanding. The same is true of copies of the output header.
 
     NOTE: The general correctness test goes into considerable detail about the correctness of each
-          element of the program, possibly more than is necessary. This is done so that other test
-          cases can refer back to the general case when elements behave in the same way, instead of
-          reiterating the same arguments.
+          element of the program on arbitrary data, possibly more than is necessary. This is done so 
+		  that other test cases can refer back to the general case when elements behave in the same 
+		  way, instead of reiterating the same arguments.
 
     USER INTERFACE TEST
     -------------------
@@ -77,17 +77,6 @@ TESTING DOCUMENTATION
             We first test for correctness in a normal case. To do this, we use the default config file
             with a seed of 1003, or 1002 if additional context is needed (i.e., ./soda soda.config 1003):
 
-                SodaCost 2
-                NumStudents 2
-                MaxPurchases 8
-                NumVendingMachines 3
-                MaxStockPerFlavour 5
-                MaxShippedPerFlavour 3
-                TimeBetweenShipments 3
-                GroupoffDelay 10
-                ParentalDelay 5
-                NumCouriers 1
-
             First, our components start in the correct order:
 
                 Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Mach1	Mach2	Cour0
@@ -114,7 +103,7 @@ TESTING DOCUMENTATION
                 outside the scope of this course). In a similar vein, 15 of the remaining 26 pushes to Bank are 
                 to Student 1, which is also not unreasonably biased compared to the expected 1/2 odds in this case.
                 An additional run using the same configuration but with seed of 1002 resulted in 21 pushes with no
-                gifts and 11/21 being to Student 0, which corroberates our statistical assumptions.
+                gifts and 11/21 being to Student 0, which corroborates our statistical assumptions.
 
                 Groupoff performs exactly 2 deposits after it starts, then terminates. Seed 1003 deposits for Student
                 0 first, then 1 second; seed 1002 deposits in the opposite order. This is precisely what is expected
@@ -137,9 +126,8 @@ TESTING DOCUMENTATION
                 Where the transfer is accepted by the WATCardOffice (T1,7, then W), picked up by the Courier (t1,7),
                 then completed by the Courier (T1,7).
 
-                The NameServer correctly applies the initial machines for Student 0 and 1, as seen in the output
-                snippit containing the start conditions of the program. That is, it assigns in round-robin order,
-                which is 0 -> 0 and 1 -> 1 in this case. Much later in the program, both students request a new
+                The NameServer correctly applies the initial machines for Student 0 and 1. That is, it assigns in round-robin 
+		order, which is 0 -> 0 and 1 -> 1 in this case. Much later in the program, both students request a new
                 name from the server due to a stock error, at which point NameServer re-assigns them to machines
                 1 and 2, respectively, as is expected of round-robin assignments:
 
@@ -215,7 +203,7 @@ TESTING DOCUMENTATION
                 Neither seed tested includes a case where the student does not skip the ad; this case is covered by
                 one of the non-general tests.
 
-            Finally, we see that termination is done correctly:
+            Finally, we see that termination is done correctly, with Groupoff terminating immediately after completing its rounds:
 
                 Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Mach1	Mach2	Cour0
                 *******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******
@@ -229,14 +217,12 @@ TESTING DOCUMENTATION
 		F56		F	F	F	F			F	F	F	F
                                                 *** PROGRAM TERMINATES ***
 
-            Where Groupoff terminated immediately after completing its rounds.
-
 
         2. A student who only buys one soda using the gift card
 
             We are testing what happens when a student purchases exactly one gift card, and can only make purchases with
 	    gift cards. In particular, we aim to ensure that students are capable of getting free sodas without reseting
-	    the gift card. We accomplish this by disabling the select statement which allows WATCards like so:
+	    the gift card. We accomplish this by disabling the select statement which allows WATCards like so in student.cc:
 
 		#ifndef CLUMSYCOURIER
                     _Select ( giftCard ) { // Prioritize using giftCard.
@@ -298,7 +284,7 @@ TESTING DOCUMENTATION
 	
 	   In this test case, we test to make sure that a courier repeatedly losing a WATCard can happen, and that it is handled
 	   correctly by the WATCardOffice, Student, and Courier. We make the following code change to reverse the odds of losing 
-	   a card from 1/6 to 5/6:
+	   a card from 1/6 to 5/6 in watcardoffice.cc:
 
 		if ( 
                     #ifndef CLUMSYCOURIER
@@ -342,9 +328,9 @@ TESTING DOCUMENTATION
         4. Students watch advertisements
 
 	   This test case is meant to check whether or not a student can receive a soda and watch the advertisement. We choose to include
-	   this case because all of the times we have checked output previously, a student who receives a free soda happens to skip the
-	   ad. Our methodology does not change the code; after all, we want to ensure that our code with the expected odds works as
-	   intended. Instead, we tested the code with arbitrary seeds until we found a case where correctness was proven.
+	   this case because all of the times we have checked output for this previously, a student who receives a free soda happens to 
+	   skip the ad. Our methodology does not change the code; after all, we want to ensure that our code, with the expected odds, works as
+	   intended. Instead, we tested the code with arbitrary seeds, looking cases where correctness was proven.
 
 	   Using seed 12634 with default soda.config, we got the following snippet of output:
 
@@ -373,3 +359,8 @@ TESTING DOCUMENTATION
 	
 	5. Testing standard behaviour with multiple couriers
         
+
+	6. Testing NameServer and Student behaviour when there is only one vending machine
+
+
+	7. Testing Truck behaviour when timeBetweenShipments is disproportionately long
