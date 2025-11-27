@@ -37,10 +37,12 @@ void Student::main( ) {
         // Attempt to purchase soda, looking for Funds, Stock, or Free
             try {
                 _Select ( giftCard ) { // Prioritize using giftCard.
-                    WATCard *gc = giftCard();
-                    vm->buy( favouriteFlavour, *gc );
-                    prt.print( Printer::Student, id, 'G', (unsigned int) favouriteFlavour, giftCard()->getBalance() );
-                    delete gc;
+                    #ifndef CLUMSYCOURIER
+                        WATCard *gc = giftCard();
+                        vm->buy( favouriteFlavour, *gc );
+                        prt.print( Printer::Student, id, 'G', (unsigned int) favouriteFlavour, giftCard()->getBalance() );
+                        delete gc;
+                    #endif
                     giftCard.reset(); // Always reset giftCard once used
                 } 
                 #ifndef TESTGCONLY

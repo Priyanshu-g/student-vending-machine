@@ -65,7 +65,13 @@ void WATCardOffice::Courier::main( ) {
                 prt.print( Printer::Courier, id, 't', currentJob->args.sid, currentJob->args.amount );
                 bank.withdraw( currentJob->args.sid, currentJob->args.amount );
                 currentJob->args.card->deposit( currentJob->args.amount );
-                if ( prng( 6 ) == 0 ) { // 1/6 chance to lose WATCard
+                if ( 
+                    #ifndef CLUMSYCOURIER
+                        prng( 6 ) == 0 
+                    #else
+                        !(prng( 6 ) == 0)
+                    #endif
+                ) { // 1/6 chance to lose WATCard
                     delete currentJob->args.card;
                     currentJob->result.delivery( new WATCardOffice::Lost );
                     prt.print( Printer::Courier, id, 'L', currentJob->args.sid );
