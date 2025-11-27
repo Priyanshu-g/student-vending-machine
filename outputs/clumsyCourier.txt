@@ -1,0 +1,143 @@
+Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Mach0	Mach1	Mach2	Cour0
+*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******
+	S	S	S							S
+			R0				S2
+			R1					S2
+S		C0,5	R2		S	S2,1			S2
+		W	N0,0	S	G3	V0				t0,5
+				P3
+				d0,3			r
+				U0,22
+D0,1				D0,0	P		R
+				P9	G9
+				d1,9				r
+				U1,16
+D0,2	D0,2			D1,0
+	F				P			R
+D0,3				P8	G8
+				d2,8					r
+				U2,17
+		C0,5		D2,0	P	L			R	L0
+D0,2		W		P8	G8					t0,5
+				d0,8			r
+				U0,14
+				D0,0	P		R
+D0,2				R0	G5	L				L0
+				P5
+				d1,5				r
+				U1,12
+		C0,5		D1,1	P			R
+				d2,1					r
+				U2,16
+D0,3		W		D2,0	G6				R	t0,5
+D0,1				P6
+				d0,6			r
+				U0,9
+				D0,1	P		R
+				d1,1				r
+				U1,12
+				D1,1	G7			R
+				d2,1					r
+				U2,15
+D0,3				D2,0					R	L0
+				R0		L
+				P7
+				d0,7			r
+				U0,5
+		C0,5		D0,3	P		R
+				d1,3				r
+				U1,12
+D0,1		W		D1,3	G8			R		t0,5
+				d2,3					r
+				U2,13
+E0,10		C0,5		D2,1		L			R	L0
+		W								t0,5
+D0,1				P8		L				L0
+				d0,8			r
+				U0,1
+D0,3		C0,5		D0,4	P		R
+				d1,4				r
+				U1,12
+		W		D1,4						t0,5
+				d2,4	G8	L		R	r	L0
+				U2,10
+D0,3		C0,5		D2,1					R
+				P8
+				d0,8			r
+		W		D0,7						t0,5
+				d1,7	P	L	R	r		L0
+				U1,10
+D0,1				D1,5	G4			R
+				d2,5					r
+				U2,10
+		C0,5		D2,5					R
+		W		P4						t0,5
+				d0,4			r
+D0,2				D0,4	P		R
+				d1,4				r
+				U1,7
+				D1,1	G6			R
+				d2,1					r
+				U2,10
+D0,2				D2,1		L			R	L0
+				P6
+				d0,6			r
+		C0,5		D0,6	P		R
+				d1,6				r
+				U1,6
+D0,3		W		D1,5	G5			R		t0,5
+				d2,5					r
+				U2,10
+D0,3		C0,5		D2,5		L			R	L0
+D0,1		W		P5						t0,5
+				d0,5			r
+D0,2				D0,5	P		R
+				d1,5				r
+				U1,5
+				D1,4	G6			R
+				d2,4					r
+				U2,10
+D0,2		C0,5		D2,4		L			R	L0
+D0,2		W		P6						t0,5
+				d0,6			r
+D0,2				D0,6	P		R			L0
+		C0,5		R6	G12	L
+D0,1		W		P12						t0,5
+				d1,12				r
+D0,3				D1,7	P			R
+				d2,7					r
+				U2,8
+				D2,5	G9				R
+				d0,5			r
+D0,2		C0,5		D0,5		L	R			L0
+				P9
+				d1,9				r
+D0,2		W		D1,9	P			R		t0,5
+D0,2				R9	G11	L				L0
+				P11
+				d2,11					r
+				U2,3
+		C0,5		D2,6	P
+D0,3		W		d0,6			r		R	t0,5
+				D0,6	G4		R
+				d1,6				r
+D0,1				D1,6				R
+D0,1		C0,5		P4		L				L0
+				d2,4					r
+				U2,1
+D0,2		W		D2,2	P				R	t0,5
+				d0,2			r
+				D0,2	G3		R
+				d1,2				r
+D0,3		C0,5		D1,2		L		R		L0
+D0,3		W								t0,5
+D0,1				P3
+				d2,3					r
+				U2,1
+				D2,3	P				R
+				d0,3			r
+				D0,3	G9		R
+				d1,3				r
+D0,3				D1,3		B2,3	B2,4	R		T0,5
+D0,2						F1,0
+F84		F	F	F	F		F	F	F	F
