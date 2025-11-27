@@ -30,17 +30,17 @@ void BottlingPlant::main(){
 
         prt.print(Printer::BottlingPlant, 'G', total); // print production done with number of bottles made 
         
-        _Accept( getShipment ){
-
-            prt.print(Printer::BottlingPlant, 'P'); // picked up by truck
-
-        } or _Accept( ~BottlingPlant ){ 
+        _Accept( ~BottlingPlant ){ 
 
             prt.print(Printer::BottlingPlant, 'F'); // all done!
 
             _Resume Shutdown() _At t;
 
             break; 
+
+        } or _Accept( getShipment ){
+
+            prt.print(Printer::BottlingPlant, 'P'); // picked up by truck
 
         }
     }

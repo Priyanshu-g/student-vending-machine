@@ -1,7 +1,6 @@
 #include "student.h"
 #include "bottlingplant.h"
 #include "vendingmachine.h"
-#include <stdexcept>
 #include <uPRNG.h>
 
 #include <iostream>
@@ -33,14 +32,16 @@ void Student::main( ) {
         if ( numDrank >= numPurchases ) { prt.print( Printer::Student, id, 'F', numDrank, numFree ); break; }
 
         if ( delay ) { yield( prng( 1, 10 ) ); }
-
+        // if ( delay ) { yield( 1000000 ); }
         else { delay = true; }
         // Attempt to purchase soda, looking for Funds, Stock, or Free
             try {
                 #ifndef CLUMSYCOURIER
                     _Select ( giftCard ) { // Prioritize using giftCard.
-                            vm->buy( favouriteFlavour, *(giftCard()) );
-                            prt.print( Printer::Student, id, 'G', (unsigned int) favouriteFlavour, giftCard()->getBalance() );
+                        WATCard *gc = giftCard();
+                        vm->buy( favouriteFlavour, *(giftCard()) );
+                        prt.print( Printer::Student, id, 'G', (unsigned int) favouriteFlavour, giftCard()->getBalance() );
+                        delete gc;
                         giftCard.reset(); // Always reset giftCard once used
                     } 
                 #endif
@@ -49,10 +50,8 @@ void Student::main( ) {
                         or
                     #endif
                     _Select ( watCard ) {
-                        
                             vm->buy( favouriteFlavour, *(watCard()) );
                             prt.print( Printer::Student, id, 'B', (unsigned int) favouriteFlavour, watCard()->getBalance() );
-                    
                     }
                 #endif
                 numDrank++;
@@ -75,5 +74,4 @@ void Student::main( ) {
     }
 
     delete watCard();
-    delete giftCard();
 }

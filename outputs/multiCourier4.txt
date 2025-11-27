@@ -1,0 +1,52 @@
+Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Mach1	Mach2	Cour0	Cour1	Cour2	Cour3
+*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******
+	S	S	S								S	S	S	S
+			R0					S2
+			R1						S2
+S			R2	S	S	S3,2	S4,4			S2
+		C0,5	N0,0		G7	V0
+D1,1		W		P7							t0,5
+				d0,7				r
+				U0,18
+		C1,5	N1,1	D0,0	P		V1
+D0,2		W			G3			R				t1,5
+D0,3				P3							T0,5
+				d1,3					r
+				U1,22
+	D0,2			D1,0	P	A3		A	R
+D0,2				R0	G8	B3,3		B3,1
+						G3,0		B3,0
+D0,1				P8		F2,1
+				d2,8						r
+				U2,17
+	D1,2			D2,0	P
+	F		N1,2	P8	G8		V2			R
+				d0,8				r
+				U0,13
+D1,3				D0,0	P			R
+				P4	G4
+				d1,4					r
+				U1,18
+D0,1				D1,0	P		G4,0		R	B4,0
+D0,2				P6	G6
+				d2,6						r
+				U2,12
+				D2,0	P					R
+D1,1				P6	G6
+				d0,6				r
+				U0,8
+				D0,1	P		B4,3	R		B4,1		T1,5
+				d1,1					r
+				U1,17
+E1,10				D1,0	G7		B4,1		R	B4,0
+D1,3				P7
+				d2,7						r
+				U2,9
+				D2,2	P					R
+				d0,2				r
+				U0,6
+D0,1		T1,7		D0,0	G9			R
+		W											t1,7
+							B4,6			B4,0			T1,7
+D0,3							F4,0
+F33		F	F	F	F			F	F	F	F	F	F	F
