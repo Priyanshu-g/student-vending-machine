@@ -52,7 +52,6 @@ int main ( int argc, char * argv[] ) {
     processConfigFile(in, config);
 
     uProcessor p[processors - 1]; // number of kernel threads
-    // TODO: Maybe use uArray here?
     VendingMachine * vendingMachines[config.numVendingMachines];
     Student * students[config.numStudents];
     {
