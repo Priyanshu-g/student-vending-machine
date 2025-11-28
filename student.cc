@@ -37,6 +37,7 @@ void Student::main( ) {
                         prt.print( Printer::Student, id, 'G', (unsigned int) favouriteFlavour, giftCard()->getBalance() );
                         delete giftCard(); // Clean up ONLY if no error is thrown
                         giftCard.reset(); // Always reset giftCard once used
+                        usedGiftCard = true; // Mark giftCard as reset, not just empty, and prevent blocking if reset
                     } 
                 #endif
                 #ifndef TESTGCONLY
@@ -72,5 +73,5 @@ void Student::main( ) {
     } _Catch ( WATCardOffice::Lost & ) { // Account for possibility of explosion when accessing future
         prt.print( Printer::Student, id, 'L' );
     } // try
-    if ( giftCard.available() ) { delete giftCard(); } // If gift card was never used, clean up
+    if ( giftCard.available() || ( usedGiftCard == false && giftCard()->getBalance() >= 0 ) ) { delete giftCard(); } // If gift card was never used, clean up
 }

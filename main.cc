@@ -80,5 +80,3 @@ int main ( int argc, char * argv[] ) {
         for ( unsigned int vm = 0; vm < config.numVendingMachines; vm++ ) { delete vendingMachines[vm]; }
     }
 }
-
-// TODO: There is a weird issue where parent and students all finish but bottling plant fails to fail.
