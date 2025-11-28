@@ -73,5 +73,9 @@ void Student::main( ) {
         
     }
 
-    delete watCard();
+    try{
+        delete watCard();
+    } _Catch ( WATCardOffice::Lost & ) {
+        prt.print( Printer::Student, id, 'L' );
+    }
 }

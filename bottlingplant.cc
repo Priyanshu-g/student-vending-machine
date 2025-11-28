@@ -10,9 +10,10 @@ BottlingPlant::BottlingPlant( Printer & prt, NameServer & nameServer, unsigned i
         }
 
 void BottlingPlant::main(){
-    prt.print(Printer::BottlingPlant, 'S');
 
     Truck t ( prt, ns, *this, nvm, mstockpf );
+    
+    prt.print(Printer::BottlingPlant, 'S');
 
     for(;;){
         yield( time );
@@ -44,8 +45,9 @@ void BottlingPlant::main(){
 
         }
     }
-
-    _Accept (getShipment) {} _Else {} // release any get shipments
+    try{
+        _Accept (getShipment) {} _Else {} // release any get shipments
+    } _Catch( uMutexFailure::RendezvousFailure& ) {}
 }
 
 void BottlingPlant::getShipment( unsigned int cargo[] ){ // refernce to the trucks cargo

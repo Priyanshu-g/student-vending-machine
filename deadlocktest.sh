@@ -1,6 +1,6 @@
 count = 0
 while true; do
-    ./soda
+    ./soda ./configs/soda.config
     ((count++))
     echo "DATA TEST COUNT HERE: $count"
 done
