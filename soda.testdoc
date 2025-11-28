@@ -394,7 +394,41 @@ TESTING DOCUMENTATION
 	   so there were no issues with a NameServer spinning on a call to getMachine waiting for a new machine to be available. We also know that this would not
 	   cause a full blockage because pre-emption would allow restocking to happen, and VendingMachine would not be stuck waiting for the mutex on NameServer
 	   to release. No output is included in this case, because the only aspect meaningfully different from the general solution is the number of operations
-	   condensed into the Machine 0 column.
+	   condensed into the Machine 0 column. Additional insight into this test case is included in the next.
 
 
 	7. Testing Truck behaviour when timeBetweenShipments is disproportionately long
+
+	   This test case is primarily to make sure that the truck will only perform a delivery when the plant is ready, and that all previously correct behaviour
+	   was not caused by the plant generating bottles faster than the truck can deliver. 
+
+		Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Cour0
+		*******	*******	*******	*******	*******	*******	*******	*******	*******	*******
+			S	S	S						S
+		S		C0,5	R0	S	S	S1,5	S0,7	S2
+		D0,2		W	N0,0			V0			t0,5
+		E1,10		C1,5	N1,0				V0
+		D1,3	D1,2		N1,0				V0
+		D0,2			N1,0				V0
+		D0,3	D0,2
+			F	W							L0
+											t1,5
+		D1,1			N0,0	P5	G5	V0			T1,5
+						d0,5				r
+						U0,20
+		D0,2			N1,0	D0,0	P		V0	R
+		D0,1			N1,0			G1,0	V0	B1,0
+		D1,3		C0,5				L
+				W							t0,5
+					N1,0				V0		T0,5
+		D1,1			N0,0			V0
+		D0,3			N0,0			V0
+					N1,0				V0
+		D1,2			N1,0	P8	G8		V0
+						d0,8				r
+						U0,13
+		D1,3				D0,0	P			R
+	   
+	   We see clearly in the output above that the truck is only able to initiate getShipment once the plant is ready (i.e., when it prints G5 or G8 in this case).
+	   We also see that the students will repeatedly call the NameServer, failing to make a purchase until their favourite flavour has been stocked. This extends
+	   our previous test case, as we have verified that there are no issues caused by the NameServer always returning the same machine.
