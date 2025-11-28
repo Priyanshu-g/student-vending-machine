@@ -73,5 +73,5 @@ void Student::main( ) {
     } _Catch ( WATCardOffice::Lost & ) { // Account for possibility of explosion when accessing future
         prt.print( Printer::Student, id, 'L' );
     } // try
-    if ( giftCard.available() || ( usedGiftCard == false && giftCard()->getBalance() >= 0 ) ) { delete giftCard(); } // If gift card was never used, clean up
+    if ( giftCard.available() || usedGiftCard == false ) { delete giftCard(); } // If gift card was never used, clean up
 }
