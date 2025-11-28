@@ -22,6 +22,7 @@ void Student::main( ) {
     prt.print( Printer::Student, id, 'V', vm->getId() );
 
     bool delay = true;
+    bool usedGiftCard = false;
 
     for ( ;; ) {
         if ( numDrank >= numPurchases ) { prt.print( Printer::Student, id, 'F', numDrank, numFree ); break; }
