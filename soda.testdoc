@@ -358,9 +358,43 @@ TESTING DOCUMENTATION
 
 	
 	5. Testing standard behaviour with multiple couriers
+	
+	   This test case is designed to ensure that multiple couriers can interface with the jobs list correctly without reaching deadlock or
+	   livelock, or by starving someone. As seen below, Courier 0 is receives the first create request, then Courier 1 receives the second,
+	   after which the program continues as normal until they are both terminated by the Parent.
+
+		Parent	Gropoff	WATOff	Names	Truck	Plant	Stud0	Stud1	Mach0	Mach1	Mach2	Cour0	Cour1
+		*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******	*******
+			S	S	S								S	S
+					R0					S2
+					R1						S2
+		S		C0,5	R2		S	S2,6	S1,4			S2
+				W	N0,0	S	G4	V0					t0,5
+		D1,2		C1,5	N1,1				V1
+		D1,1		W		P4								t1,5
+						d0,4				r
+						U0,21
+			D1,2			D0,0	P			R
+		D1,2			N1,2	P4	G4		V2
+						d1,4	P				r			T1,5
+						*** 12 LINES OF OUTPUT OMITTED
+		D0,2			N0,0	P4	G4	V0	B1,1	B1,1			T0,5
+						*** > 20 LINES OF OUTPUT OMITTED ***
+		F46		F	F	F	F			F	F	F	F	F
+
+	   An additional case was tested with 4 Couriers, in which the same behaviour was observed. However, Courier 3 did not receive a task because
+	   both students managed to purchase all of their desired beverages without requiring more than the two initial create requests and one
+	   transfer request. Couriers 0, 1, and 2 received their jobs in that order per the queuing logic of uc++ _Accept statements.
         
 
 	6. Testing NameServer and Student behaviour when there is only one vending machine
+
+	   This test case is designed to verify that Students and the NameServer would perform correctly with just one vending machine. In our output,
+	   we found that no calls to NameServer were required; this was due to much faster restocking. Specifically, the truck only needed to restock one machine,
+	   so there were no issues with a NameServer spinning on a call to getMachine waiting for a new machine to be available. We also know that this would not
+	   cause a full blockage because pre-emption would allow restocking to happen, and VendingMachine would not be stuck waiting for the mutex on NameServer
+	   to release. No output is included in this case, because the only aspect meaningfully different from the general solution is the number of operations
+	   condensed into the Machine 0 column.
 
 
 	7. Testing Truck behaviour when timeBetweenShipments is disproportionately long
